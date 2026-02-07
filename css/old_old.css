@@ -1,0 +1,152 @@
+body{
+  font-family: Roboto, Arial;
+}
+
+label[for="middle-name"]{
+  font-size: 14px;
+}
+
+/* Strength bar container */
+
+.strength-bars {
+  display: none; /* Initially hide strength bars */
+  gap: 5px;
+  margin-top: 10px;
+}
+
+/* Individual bar styles */
+.bar {
+  width: 30%;
+  height: 5px;
+  background-color: white; /* Default state */
+  border: 1px solid #ddd;
+  border-radius: 2px;
+}
+
+/* Red color (Weak) */
+.bar.red {
+  background-color: red;
+}
+
+/* Orange color (Medium) */
+.bar.orange {
+  background-color: orange;
+}
+
+/* Green color (Strong) */
+.bar.green {
+  background-color: green;
+}
+
+#password {
+  padding-right: 45px; /* To create space for the toggle button */
+}
+
+/* Styling the password input wrapper */
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px; /* Adjust padding to make space for the button */
+}
+
+.toggle-password {
+  border: 1px ; /* Remove button border */
+  background: none; /* Remove button background */
+  padding: 0; /* Remove padding */
+  cursor: pointer; /* Change cursor to pointer */
+}
+
+.password-wrapper .toggle-password img {
+  width: 20px; /* Set icon width */
+  height: 20px; /* Set icon height */
+}
+
+
+.dropdown-submenu {
+  position: relative;
+  width: 235px;
+}
+
+.input-submenu {
+  display: none; /* Initially hide the input field */
+  position: absolute; /* Position it absolutely */
+  left: 100%; /* Position it to the right of the parent */
+  top: 0; /* Align it with the parent */
+  z-index: 1000; /* Ensure it appears above other elements */
+  padding: 5px; /* Padding around the input field */
+  background-color: #fff; /* Match background color with dropdown */
+  border: 1px solid #ccc; /* Light border to match dropdown */
+  border-radius: 4px; /* Rounded corners for a modern look */
+}
+
+.input-submenu input {
+  width: 180px; /* Set a fixed width for the input field */
+  height: 34px; /* Adjust height to match the button height */
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 4px; /* Rounded corners */
+  padding: 5px; /* Inner spacing */
+  background-color: #f9f9f9; /* Light background color */
+  transition: border-color 0.2s; /* Smooth transition for border color */
+}
+
+
+
+.error-message {
+  color: red; /* Error message color */
+  display: none; /* Initially hide error message */
+}
+
+.ordinal-number {
+  margin-top: 5px; /* Spacing above the ordinal number */
+}
+
+.submit-btn {
+  margin-top: 10px; /* Space above the submit button */
+}
+.btn-light {
+  background-color: #f8f9fa; /* A light gray shade */
+  border-color: #ced4da; /* Light border */
+}
+
+.btn-light:hover {
+  background-color: #e2e6ea; /* Slightly darker gray on hover */
+  border-color: #adb5bd; /* Slightly darker border */
+}
+
+.btn-light:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5); /* Bootstrap focus style */
+}
+
+
+
+.dropdown-menu .select-option {
+  color: #000; /* Set text color to black */
+  text-decoration: none; /* Remove underline */
+  display: block; /* Make links block elements for better spacing */
+  padding: 8px 16px; /* Add padding for better click area */
+}
+
+.dropdown-menu .select-option:hover {
+  background-color: #e2e6ea; /* Change background on hover for visibility */
+}
+
+.dropdown-menu .dropdown-item {
+  color: #000; /* Ensure all dropdown items are black */
+}
+
+#extension-name {
+  width: 235px; /* Set your desired width */
+  display: flex; /* Use flexbox for alignment */
+  justify-content: flex-start; /* Align items to the left */
+  align-items: center; /* Center vertically */
+  padding: 10px; /* Add padding for better appearance */
+}
+
+#extension-name .caret {
+  margin-left: 130px; /* Add space between text and dropdown icon */
+}
+
+

@@ -1,0 +1,5 @@
+# Allow CSS to be served for this project.
+# The previous rules were blocking .css requests unless the referrer matched another project.
+<FilesMatch "\.css$">
+    Require all granted
+</FilesMatch>

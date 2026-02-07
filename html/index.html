@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TaskFlow - Login</title>
+  <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/login.css?v=2">
+</head>
+<body>
+
+<header>
+  <!-- Same header as registration (H01 – Glass Simple) -->
+  <nav class="tf-header H01" aria-label="Primary navigation">
+    <div class="tf-header__inner">
+      <a class="tf-logo" href="../">Task<span>Flow</span></a>
+      <div class="tf-header__links">
+        <a href="#">Home</a>
+        <a href="registration.html">Register</a>
+              </div>
+    </div>
+  </nav>
+</header>
+
+
+<div class="tf-page">
+
+<section class="container-fluid hero-section tf-auth">
+  <!-- <div class="hero-text">
+    <h1>TaskFlow</h1>
+    <p>"Organize your day, accomplish your goals."</p>
+  </div> -->
+
+  <div class="login-container tf-card">
+    <h2 class="text-center mb-4">Login</h2>
+    <!-- action="php/login.php" -->
+    <form id="login-form"  method="POST">
+      <div class="row g-3">
+
+ 
+        <div class="col-md-12 mb-3">
+          <label for="username-email" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username-email" name="username_email" placeholder="Enter your username" required>
+          
+          <div class="valid-feedback"></div>
+          <div class="invalid-feedback">Please enter your username.</div>
+        </div>
+
+
+       <div class="col-md-12 mb-3">
+          <label for="login-password" class="form-label">Password</label>
+
+          <div class="input-group has-validation password-wrapper">
+            <input type="password" class="form-control" id="login-password" name="password" placeholder="Enter your password" required>
+            <button type="button" id="togglePassword" class="toggle-password" aria-label="Show Password">
+              <img src="../assets/icons/visibility_on.svg" alt="Show Password" id="passwordIcon">
+            </button>
+            <div class="valid-feedback"></div>
+            <div class="invalid-feedback"></div>
+          </div>
+        
+          <div class="password-indicator"></div>
+        
+      </div>
+
+
+        <div class="col-12 mt-4 text-center">
+          <button class="btn btn-primary w-50" type="submit" name="sbmt-btn">Login</button>
+        </div>
+      </div>
+    </form>
+
+    <p class="text-center mt-3">Don't have an account? <a href="registration.html" id="bottomRegister">Register Here</a></p>
+  </div>
+</section>
+
+
+<!-- Same simplified footer as registration -->
+<footer class="tf-footer" role="contentinfo">
+  <div class="tf-footer__inner">
+    <div>© 2024 TaskFlow. All rights reserved.</div>
+  </div>
+</footer>
+
+</div>
+
+
+<script src="../bootstrap/js/jquery-3.7.1.min.js"></script>
+<script src="../bootstrap/js/popper.min.js"></script>
+<script src="../bootstrap/js/bootstrap.js"></script>
+
+<button type="button" class="tf-theme-toggle" data-theme-toggle aria-label="Toggle theme" title="Toggle theme">
+  <span class="tf-theme-toggle__icon" data-theme-icon>🌙</span>
+  <span class="tf-theme-toggle__label" data-theme-label>Dark</span>
+</button>
+
+<script src="../js/theme.js"></script>
+<script src="../js/login.js"></script>
+
+
+</body>
+</html>

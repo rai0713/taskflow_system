@@ -1,0 +1,851 @@
+/* Registration page styling
+   Premium upgrade (hero background + glass card + improved inputs/buttons)
+   Works with html/registration.html
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Theme variables (default = dark) */
+  --tf-bg: #0b0f14;
+  --tf-surface: rgba(17, 24, 39, 0.82);
+  --tf-surface-2: rgba(10, 12, 16, 0.88);
+  --tf-border: rgba(255, 255, 255, 0.10);
+  --tf-border-2: rgba(255, 255, 255, 0.14);
+  --tf-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+
+  --tf-text: rgba(255, 255, 255, 0.92);
+  --tf-muted: rgba(255, 255, 255, 0.68);
+
+  --tf-accent: #c9a227; /* muted gold */
+
+  /* Input surface */
+  --tf-input-bg: rgba(255, 255, 255, 0.06);
+  --tf-input-text: rgba(255, 255, 255, 0.92);
+  --tf-input-placeholder: rgba(255, 255, 255, 0.55);
+  --tf-input-border: rgba(255, 255, 255, 0.14);
+  --tf-input-hover: rgba(255, 255, 255, 0.08);
+  --tf-input-focus: rgba(255, 255, 255, 0.10);
+
+  /* Primary button */
+  --tf-btn-bg: #ffffff;
+  --tf-btn-text: #0b0f14;
+  --tf-btn-border: rgba(255, 255, 255, 0.22);
+  --tf-btn-hover-bg: #f8fafc;
+}
+
+/* Light theme overrides */
+:root[data-theme="light"] {
+  --tf-bg: #f5f7fb;
+  --tf-surface: rgba(255, 255, 255, 0.88);
+  --tf-surface-2: rgba(255, 255, 255, 0.92);
+  --tf-border: rgba(2, 6, 23, 0.08);
+  --tf-border-2: rgba(2, 6, 23, 0.12);
+  --tf-shadow: 0 24px 70px rgba(2, 6, 23, 0.14);
+
+  --tf-text: rgba(2, 6, 23, 0.92);
+  --tf-muted: rgba(2, 6, 23, 0.62);
+
+  --tf-input-bg: rgba(2, 6, 23, 0.02);
+  --tf-input-text: rgba(2, 6, 23, 0.92);
+  --tf-input-placeholder: rgba(2, 6, 23, 0.45);
+  --tf-input-border: rgba(2, 6, 23, 0.14);
+  --tf-input-hover: rgba(2, 6, 23, 0.04);
+  --tf-input-focus: rgba(2, 6, 23, 0.06);
+
+  --tf-btn-bg: #0b0f14;
+  --tf-btn-text: #ffffff;
+  --tf-btn-border: rgba(2, 6, 23, 0.18);
+  --tf-btn-hover-bg: #111827;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  /* Allow scrolling (we hide the scrollbar via CSS below) */
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* old Edge/IE */
+}
+
+body {
+  font-family: 'Poppins', Roboto, Arial, sans-serif;
+  color: var(--tf-text);
+
+  background: var(--tf-bg);
+  min-height: 100vh;
+
+  /* Scroll allowed, but scrollbar hidden */
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* old Edge/IE */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.required::after {
+  content: " *";
+  color: red;
+}
+
+/* Page wrapper + auth section */
+.tf-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Registration layout spacing */
+.tf-auth {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 80px; /* fixed header clearance */
+  padding-bottom: 10px;
+}
+
+/* Scale ONLY the registration form/card area (not the header/footer) */
+.tf-auth > .tf-card {
+  transform: scale(0.89);
+  transform-origin: top center;
+  margin-top: 10px; /* BIG visible gap below header */
+}
+/* Keep footer visible but not tall */
+
+/* Header (H01 – Glass Simple)
+   - full-width border (no inset)
+   - stays clean on scroll (no page bleed)
+*/
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1030;
+  padding: 0;
+  background: var(--tf-surface-2);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--tf-border);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.40);
+}
+
+/* Lighter header treatment in light mode (less heavy shadow) */
+:root[data-theme="light"] header {
+  box-shadow: 0 10px 26px rgba(2, 6, 23, 0.10);
+  backdrop-filter: blur(10px);
+}
+
+.tf-header {
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+  background: transparent;
+  border-bottom: 0;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+.tf-header__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+}
+
+.tf-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.7rem;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+  color: var(--tf-text);
+  text-decoration: none;
+  line-height: 1;
+}
+
+.tf-logo span {
+  color: var(--tf-accent);
+}
+
+:root[data-theme="light"] .tf-logo span {
+  color: #b38700;
+}
+
+/* Subtle hover polish for the brand */
+.tf-logo:hover {
+  opacity: 0.95;
+}
+
+.tf-header__links {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Theme toggle button (floating) */
+.tf-theme-toggle {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 9999;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--tf-border-2);
+  background: var(--tf-surface-2);
+  color: var(--tf-text);
+  font-weight: 800;
+  font-size: 0.92rem;
+  line-height: 1;
+  cursor: pointer;
+
+  /* Visible but subtle */
+  opacity: 0.80;
+
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(12px);
+  transition: transform 0.08s ease, background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.tf-theme-toggle:hover {
+  transform: translateY(-1px);
+  border-color: var(--tf-border-2);
+  opacity: 1;
+}
+
+:root[data-theme="light"] .tf-theme-toggle {
+  box-shadow: 0 14px 30px rgba(2, 6, 23, 0.12);
+}
+
+.tf-theme-toggle__icon {
+  font-size: 0.95rem;
+  width: 1.1em;
+  text-align: center;
+}
+
+.tf-theme-toggle__label {
+  opacity: 0.92;
+}
+
+.tf-header__links a {
+  color: var(--tf-text);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 8px 12px;
+  border-radius: 999px;
+  transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+
+.tf-header__links a:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="light"] .tf-header__links a:hover {
+  background: rgba(2, 6, 23, 0.06);
+}
+
+:root[data-theme="light"] .tf-header__links a {
+  color: rgba(2, 6, 23, 0.78);
+}
+
+:root[data-theme="light"] .tf-header__links a:hover {
+  color: rgba(2, 6, 23, 0.92);
+  background: rgba(2, 6, 23, 0.06);
+}
+
+
+/* Make the last link look like a CTA (Login button) */
+.tf-header__links a:last-child {
+  background: var(--tf-btn-bg);
+  color: var(--tf-btn-text);
+  border: 1px solid var(--tf-btn-border);
+}
+
+.tf-header__links a:last-child:hover {
+  background: var(--tf-btn-hover-bg);
+  color: var(--tf-btn-text);
+}
+
+/* Mobile header */
+@media (max-width: 576px) {
+  .tf-logo {
+    font-size: 1.55rem;
+  }
+
+  .tf-header__links a {
+    padding: 7px 10px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Registration card (ALL-DARK, consistent with page)
+   Force override Bootstrap background utilities like bg-white.
+*/
+.tf-card.container-fluid {
+  max-width: 980px;
+  margin: auto;
+  padding: 18px;
+
+  border-radius: 18px;
+  background: var(--tf-surface) !important;
+  border: 1px solid var(--tf-border-2);
+  box-shadow: var(--tf-shadow);
+  backdrop-filter: blur(14px);
+}
+
+/* Extra layered sheen */
+.tf-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.tf-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  /* subtle neutral highlights */
+  background:
+    radial-gradient(520px 240px at 15% 0%, rgba(255,255,255,0.05), transparent 60%),
+    radial-gradient(520px 240px at 85% 0%, rgba(255,255,255,0.04), transparent 60%);
+  pointer-events: none;
+}
+
+/* In light mode, remove the dark-card sheen overlay */
+:root[data-theme="light"] .tf-card::before {
+  opacity: 0;
+}
+
+.tf-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+h2 {
+  font-weight: 900;
+  font-size: 1.65rem;
+  letter-spacing: 0.2px;
+  color: var(--tf-text);
+}
+
+.tf-subtitle {
+  color: var(--tf-muted) !important;
+}
+
+label {
+  font-weight: 600;
+  color: var(--tf-text);
+  font-size: 0.92rem;
+}
+
+/* Inputs (ALL-DARK, high contrast on dark card) */
+input.form-control,
+select.form-select {
+  border-radius: 12px;
+  border: 1px solid var(--tf-input-border);
+  background-color: var(--tf-input-bg) !important;
+  color: var(--tf-input-text) !important;
+  -webkit-text-fill-color: var(--tf-input-text);
+  caret-color: var(--tf-input-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  padding: 9px 10px;
+  font-size: 0.88rem;
+  color-scheme: dark;
+}
+
+/* Make <option> list dark where supported (some browsers/OS ignore this) */
+.tf-card select.form-select option {
+  background-color: rgba(17, 24, 39, 0.98);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+input.form-control::placeholder {
+  color: var(--tf-input-placeholder);
+  opacity: 1;
+}
+
+/* Fix placeholders looking like typed text (stronger contrast difference) */
+input.form-control:placeholder-shown {
+  font-weight: 500;
+}
+
+input.form-control:hover,
+select.form-select:hover {
+  border-color: var(--tf-border-2);
+  background-color: var(--tf-input-hover);
+}
+
+input.form-control:focus,
+select.form-select:focus {
+  border-color: var(--tf-border-2);
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.14);
+  background-color: var(--tf-input-focus);
+  color: var(--tf-input-text) !important;
+  -webkit-text-fill-color: var(--tf-input-text);
+  caret-color: var(--tf-input-text);
+}
+
+/* Password UI (kept) */
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+/* Make room for the icon INSIDE the input */
+.password-wrapper input {
+  width: 100%;
+  padding-right: 46px;
+}
+
+/* Hide the Bootstrap input-group addon box entirely for password fields */
+.password-wrapper .input-group-text {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  border-radius: 12px !important;
+}
+
+/* Force the password input to keep rounded right corners (Bootstrap input-group removes it) */
+.password-wrapper input.form-control {
+  border-top-right-radius: 12px !important;
+  border-bottom-right-radius: 12px !important;
+}
+
+/* Place the toggle button INSIDE the field (like social apps) */
+.password-wrapper .toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-wrapper .toggle-password:hover {
+  background: transparent;
+}
+
+.password-wrapper .toggle-password:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.password-wrapper .toggle-password img {
+  width: 18px;
+  height: 18px;
+  display: block;
+  opacity: 0.80;
+  filter: none;
+}
+
+.password-wrapper .toggle-password:hover img {
+  opacity: 1;
+}
+
+/* Keep input-group addon normal elsewhere (non-password groups) */
+.input-group-text {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Password strength bars (kept) */
+.strength-bars {
+  display: none;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.bar {
+  width: 25%;
+  height: 4px;
+  background-color: #e0e0e0;
+  border-radius: 2px;
+  transition: background-color 0.3s ease;
+}
+
+.bar.red { background-color: red; }
+.bar.orange { background-color: orange; }
+.bar.green { background-color: green; }
+
+/* Extension dropdown submenu + dropdowns (dark consistent) */
+.dropdown-submenu {
+  position: relative;
+}
+
+/* Bootstrap dropdown surface */
+.tf-card .dropdown-menu {
+  background: var(--tf-surface-2);
+  border: 1px solid var(--tf-border-2);
+  border-radius: 12px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+}
+
+.tf-card .dropdown-menu .dropdown-item,
+.tf-card .dropdown-menu .select-option {
+  color: var(--tf-text);
+}
+
+.tf-card .dropdown-menu .dropdown-item:hover,
+.tf-card .dropdown-menu .select-option:hover {
+  background: rgba(255, 255, 255, 0.10);
+  color: var(--tf-text);
+}
+
+/* Extension button should match inputs */
+.tf-card #extension-name.btn,
+.tf-card #extension-name.btn.btn-light {
+  background: var(--tf-input-bg) !important;
+  border: 1px solid var(--tf-input-border) !important;
+  color: var(--tf-input-text) !important;
+  border-radius: 12px;
+  padding: 9px 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.tf-card #extension-name.btn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+/* "Other" submenu panel (dark) */
+.input-submenu {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  z-index: 1100;
+  width: 260px;
+  padding: 10px;
+  background: var(--tf-surface-2);
+  border: 1px solid var(--tf-border-2);
+  border-radius: 12px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+}
+
+.input-submenu label {
+  color: var(--tf-text);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.input-submenu input {
+  width: 100%;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid var(--tf-input-border);
+  padding: 8px 10px;
+  background-color: var(--tf-input-bg) !important;
+  color: var(--tf-input-text);
+  font-size: 0.88rem;
+}
+
+.input-submenu input::placeholder {
+  color: var(--tf-input-placeholder);
+}
+
+.error-message {
+  color: red;
+  font-size: 0.85rem;
+  display: none;
+}
+
+.dropdown-menu .select-option {
+  font-size: 0.9rem;
+  padding: 6px 12px;
+  color: #000;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-menu .select-option:hover {
+  background-color: #e2e6ea;
+}
+
+.dropdown-menu .dropdown-item {
+  color: #000;
+}
+
+#other-extension {
+  width: 205px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px;
+}
+
+#extension-name .caret {
+  margin-left: 110px;
+}
+
+/* Validation messages (visible on dark background) */
+.valid-feedback,
+.invalid-feedback {
+  font-size: 12px;
+  padding-top: 2px;
+}
+
+.valid-feedback { color: #34d399; }
+.invalid-feedback { color: #fb7185; }
+
+/* Buttons (professional + consistent) */
+button[type="submit"] {
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 800;
+  border-radius: 12px;
+}
+
+/* Ensure dropdown and helper text are readable on dark card */
+.tf-card .dropdown-menu {
+  border-radius: 12px;
+}
+
+.tf-card .form-text {
+  color: var(--tf-muted) !important;
+}
+
+.btn.btn-primary {
+  background: var(--tf-btn-bg);
+  color: var(--tf-btn-text);
+  border: 1px solid var(--tf-btn-border);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.40);
+}
+
+.btn.btn-primary:hover {
+  background: var(--tf-btn-hover-bg);
+  color: var(--tf-btn-text);
+}
+
+.btn.btn-primary:focus {
+  box-shadow: 0 0 0 0.22rem rgba(255, 255, 255, 0.16);
+}
+
+.btn.btn-outline-primary {
+  color: var(--tf-text);
+  border-color: var(--tf-border-2);
+}
+
+.btn.btn-outline-primary:hover {
+  background: var(--tf-input-hover);
+  border-color: var(--tf-border-2);
+  color: var(--tf-text);
+}
+
+/* Footer (simple copyright only) */
+.tf-footer {
+  width: 100%;
+  margin-top: 6px;
+  background: var(--tf-surface-2);
+  border-top: 1px solid var(--tf-border);
+}
+
+.tf-footer__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 6px 16px;
+  text-align: center;
+  color: var(--tf-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Stepper (multi-step registration) */
+.tf-subtitle {
+  font-size: 0.88rem;
+}
+
+/* Make default text inside the DARK card readable (Bootstrap text utilities can conflict) */
+.tf-card,
+.tf-card .text-muted {
+  color: var(--tf-muted) !important;
+}
+
+/* Make Bootstrap bg-white utility not fight our theme in light mode */
+:root[data-theme="light"] .tf-card.bg-white {
+  background: var(--tf-surface) !important;
+}
+
+.tf-card hr {
+  border-color: var(--tf-border);
+  opacity: 1;
+}
+
+.tf-card h6 {
+  color: var(--tf-text);
+}
+
+.tf-stepper {
+  position: relative;
+}
+
+.tf-stepper__track {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--tf-border);
+  overflow: hidden;
+  margin: 12px 6px 14px;
+}
+
+.tf-stepper__bar {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: var(--tf-text);
+  transition: width 0.25s ease;
+}
+
+.tf-stepper__steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.tf-step {
+  width: 100%;
+  border: 1px solid var(--tf-border);
+  background: var(--tf-input-bg);
+  color: var(--tf-text);
+  padding: 8px 8px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.tf-step:hover {
+  border-color: var(--tf-border-2);
+  background: var(--tf-input-hover);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
+}
+
+.tf-step:active {
+  transform: translateY(1px);
+}
+
+.tf-step--active {
+  background: var(--tf-input-focus);
+  border-color: var(--tf-border-2);
+  color: var(--tf-text);
+}
+
+.tf-panels {
+  margin-top: 6px;
+}
+
+.tf-panel {
+  display: none;
+}
+
+.tf-panel.is-active {
+  display: block;
+  animation: tfFadeUp 0.18s ease;
+}
+
+@keyframes tfFadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tf-panel__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btn-outline-primary {
+  border-radius: 12px;
+}
+
+/* Requested mobile overlay blur + hamburger/close behavior (matches your snippet)
+   This won't break Bootstrap navbar; it only adds the overlay when header.show-mobile-menu is toggled.
+*/
+header.show-mobile-menu::before {
+  content: "";
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px);
+}
+
+/* Mobile tweaks */
+@media (max-width: 768px) {
+  header {
+    padding: 10px;
+  }
+
+  .navbar {
+    border-radius: 14px;
+  }
+
+  .navbar-brand {
+    font-size: 1.7rem;
+  }
+
+  header.show-mobile-menu::before {
+    content: "";
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+  }
+
+  .container-fluid {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  h2 {
+    font-size: 1.55rem;
+  }
+
+  .tf-stepper__steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tf-panel__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tf-panel__actions .btn {
+    width: 100%;
+  }
+}

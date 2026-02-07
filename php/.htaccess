@@ -1,0 +1,6 @@
+<FilesMatch "\.php$">
+    <If "%{HTTP_REFERER} =~ m#^http://localhost/alpuerto_act3/#">
+        Require all granted
+    </If>
+    Require all denied
+</FilesMatch>

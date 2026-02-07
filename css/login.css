@@ -1,0 +1,328 @@
+/* Login page theme (independent from register.css)
+   - Supports Dark/Light mode via :root[data-theme="light"] (set by js/theme.js)
+   - Keeps the same UI language as registration
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Dark theme defaults */
+  --tf-bg: #0b0f14;
+  --tf-surface: rgba(17, 24, 39, 0.82);
+  --tf-surface-2: rgba(10, 12, 16, 0.88);
+  --tf-border: rgba(255, 255, 255, 0.10);
+  --tf-border-2: rgba(255, 255, 255, 0.14);
+  --tf-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+
+  --tf-text: rgba(255, 255, 255, 0.92);
+  --tf-muted: rgba(255, 255, 255, 0.68);
+
+  --tf-accent: #c9a227;
+
+  --tf-input-bg: rgba(255, 255, 255, 0.06);
+  --tf-input-text: rgba(255, 255, 255, 0.92);
+  --tf-input-placeholder: rgba(255, 255, 255, 0.55);
+  --tf-input-border: rgba(255, 255, 255, 0.14);
+  --tf-input-hover: rgba(255, 255, 255, 0.08);
+  --tf-input-focus: rgba(255, 255, 255, 0.10);
+
+  --tf-btn-bg: #ffffff;
+  --tf-btn-text: #0b0f14;
+  --tf-btn-border: rgba(255, 255, 255, 0.22);
+  --tf-btn-hover-bg: #f8fafc;
+}
+
+:root[data-theme="light"] {
+  --tf-bg: #f5f7fb;
+  --tf-surface: rgba(255, 255, 255, 0.88);
+  --tf-surface-2: rgba(255, 255, 255, 0.92);
+  --tf-border: rgba(2, 6, 23, 0.08);
+  --tf-border-2: rgba(2, 6, 23, 0.12);
+  --tf-shadow: 0 24px 70px rgba(2, 6, 23, 0.14);
+
+  --tf-text: rgba(2, 6, 23, 0.92);
+  --tf-muted: rgba(2, 6, 23, 0.62);
+
+  --tf-input-bg: rgba(2, 6, 23, 0.02);
+  --tf-input-text: rgba(2, 6, 23, 0.92);
+  --tf-input-placeholder: rgba(2, 6, 23, 0.45);
+  --tf-input-border: rgba(2, 6, 23, 0.14);
+  --tf-input-hover: rgba(2, 6, 23, 0.04);
+  --tf-input-focus: rgba(2, 6, 23, 0.06);
+
+  --tf-btn-bg: #0b0f14;
+  --tf-btn-text: #ffffff;
+  --tf-btn-border: rgba(2, 6, 23, 0.18);
+  --tf-btn-hover-bg: #111827;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', Roboto, Arial, sans-serif;
+  background: var(--tf-bg) !important;
+  color: var(--tf-text);
+  min-height: 100vh;
+}
+
+/* Header (same markup as registration) */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1030;
+  background: var(--tf-surface-2);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--tf-border);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.40);
+}
+
+:root[data-theme="light"] header {
+  box-shadow: 0 10px 26px rgba(2, 6, 23, 0.10);
+  backdrop-filter: blur(10px);
+}
+
+.tf-header__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+}
+
+.tf-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.7rem;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+  color: var(--tf-text);
+  text-decoration: none;
+  line-height: 1;
+}
+
+.tf-logo span {
+  color: var(--tf-accent);
+}
+
+.tf-header__links {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.tf-header__links a {
+  color: var(--tf-text) !important;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 8px 12px;
+  border-radius: 999px;
+}
+
+.tf-header__links a:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="light"] .tf-header__links a:hover {
+  background: rgba(2, 6, 23, 0.06);
+}
+
+/* CTA is the last link */
+.tf-header__links a:last-child {
+  background: var(--tf-btn-bg);
+  color: var(--tf-btn-text) !important;
+  border: 1px solid var(--tf-btn-border);
+}
+
+.tf-header__links a:last-child:hover {
+  background: var(--tf-btn-hover-bg);
+  color: var(--tf-btn-text) !important;
+}
+
+/* Theme toggle button */
+/* Theme toggle button (floating) */
+.tf-theme-toggle {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 9999;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--tf-border-2);
+  background: var(--tf-surface-2);
+  color: var(--tf-text);
+  font-weight: 800;
+  font-size: 0.92rem;
+  line-height: 1;
+  cursor: pointer;
+
+  opacity: 0.80;
+
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(12px);
+  transition: transform 0.08s ease, opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.tf-theme-toggle:hover {
+  transform: translateY(-1px);
+  opacity: 1;
+  border-color: var(--tf-border-2);
+}
+
+:root[data-theme="light"] .tf-theme-toggle {
+  box-shadow: 0 14px 30px rgba(2, 6, 23, 0.12);
+}
+
+.tf-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.tf-auth {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 90px; /* fixed header clearance */
+  padding-bottom: 18px;
+}
+
+.hero-section {
+  padding: 0;
+  margin: 0;
+}
+
+/* Card */
+.tf-card {
+  width: 100%;
+  max-width: 520px;
+  border-radius: 18px;
+  background: var(--tf-surface) !important;
+  border: 1px solid var(--tf-border-2);
+  box-shadow: var(--tf-shadow);
+  padding: 18px;
+}
+
+h2 {
+  color: var(--tf-text);
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+
+label {
+  color: var(--tf-text);
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+input.form-control {
+  border-radius: 12px;
+  border: 1px solid var(--tf-input-border);
+  background: var(--tf-input-bg) !important;
+  color: var(--tf-input-text) !important;
+  -webkit-text-fill-color: var(--tf-input-text);
+  caret-color: var(--tf-input-text);
+  padding: 9px 10px;
+  font-size: 0.88rem;
+}
+
+input.form-control::placeholder {
+  color: var(--tf-input-placeholder);
+}
+
+input.form-control:hover {
+  background: var(--tf-input-hover) !important;
+}
+
+input.form-control:focus {
+  background: var(--tf-input-focus) !important;
+  border-color: var(--tf-border-2);
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.14);
+  color: var(--tf-input-text) !important;
+  -webkit-text-fill-color: var(--tf-input-text);
+  caret-color: var(--tf-input-text);
+}
+
+/* Password eye inside input */
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 46px;
+  border-top-right-radius: 12px !important;
+  border-bottom-right-radius: 12px !important;
+}
+
+.password-wrapper .toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-wrapper .toggle-password img {
+  width: 18px;
+  height: 18px;
+  display: block;
+  opacity: 0.80;
+}
+
+.password-wrapper .toggle-password:hover img {
+  opacity: 1;
+}
+
+/* Button */
+.btn.btn-primary {
+  background: var(--tf-btn-bg);
+  color: var(--tf-btn-text);
+  border: 1px solid var(--tf-btn-border);
+  border-radius: 12px;
+  font-weight: 800;
+}
+
+.btn.btn-primary:hover {
+  background: var(--tf-btn-hover-bg);
+  color: var(--tf-btn-text);
+}
+
+/* Footer */
+.tf-footer {
+  width: 100%;
+  margin-top: 6px;
+  background: var(--tf-surface-2);
+  border-top: 1px solid var(--tf-border);
+}
+
+.tf-footer__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 8px 16px;
+  text-align: center;
+  color: var(--tf-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+}

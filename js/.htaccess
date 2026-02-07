@@ -1,0 +1,5 @@
+# Allow JavaScript files to be served for this project
+# (Previous rules were blocking .js unless the referrer matched a different project.)
+<FilesMatch "\.js$">
+    Require all granted
+</FilesMatch>

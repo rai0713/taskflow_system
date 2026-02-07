@@ -1,0 +1,405 @@
+  <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TaskFlow – Header & Footer Templates (Preview)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#111827;
+      --panel2:#0a0c10;
+      --border:rgba(255,255,255,.10);
+      --muted:rgba(255,255,255,.70);
+      --text:rgba(255,255,255,.92);
+      --card:rgba(255,255,255,.06);
+      --card2:rgba(255,255,255,.10);
+      --accent:#c9a227;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
+    body{background:var(--bg);color:var(--text);}
+
+    .page{max-width:1200px;margin:0 auto;padding:24px 16px 60px;}
+    h1{font-size:1.5rem;font-weight:800;letter-spacing:.2px;}
+    .sub{margin-top:6px;color:var(--muted);line-height:1.35;}
+
+    .toolbar{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+    .pill{
+      display:inline-flex;gap:10px;align-items:center;
+      padding:10px 12px;border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      border-radius:12px;
+    }
+
+    label{font-size:.88rem;color:var(--muted);}
+    select{
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.14);
+      color:var(--text);
+      padding:8px 10px;
+      border-radius:10px;
+      outline:none;
+    }
+
+    .grid{margin-top:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+    @media (max-width: 900px){.grid{grid-template-columns:1fr;}}
+
+    .preview{
+      border:1px solid var(--border);
+      border-radius:16px;
+      overflow:hidden;
+      background:rgba(255,255,255,.03);
+    }
+
+    .meta{
+      padding:10px 12px;
+      border-bottom:1px solid var(--border);
+      display:flex;justify-content:space-between;align-items:center;
+      gap:12px;
+    }
+    .meta .name{font-weight:800;}
+    .meta .hint{font-size:.85rem;color:var(--muted);}
+
+    .canvas{background:#0b0f14;}
+    .hero{
+      padding:26px 18px 22px;
+      border-top:1px solid rgba(255,255,255,.06);
+      border-bottom:1px solid rgba(255,255,255,.06);
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    /* Generic utility */
+    .row{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .brand{font-weight:900;letter-spacing:.3px;}
+    .brand span{color:var(--accent);}
+    .nav{display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
+    a{color:inherit;text-decoration:none;}
+
+    .btn{
+      border-radius:12px;
+      padding:8px 12px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      font-weight:700;
+      font-size:.88rem;
+    }
+
+    /* ========== HEADER TEMPLATES (H01..H15) ========== */
+    .H01{background:rgba(10,12,16,.75);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 16px;}
+    .H01 .nav a{opacity:.85;} .H01 .nav a:hover{opacity:1;}
+
+    .H02{background:rgba(17,24,39,.85);backdrop-filter:blur(12px);padding:16px 16px;border-bottom:1px solid rgba(255,255,255,.08);}
+    .H02 .btn{background:#fff;color:#0b0f14;border-color:rgba(255,255,255,.22);} 
+
+    .H03{background:transparent;padding:14px 16px;}
+    .H03 .wrap{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:12px 12px;backdrop-filter:blur(12px);} 
+
+    .H04{background:rgba(10,12,16,.9);padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.12);} 
+    .H04 .brand{font-weight:800;} .H04 .nav a{color:rgba(255,255,255,.78);} .H04 .nav a:hover{color:#fff;}
+
+    .H05{background:rgba(11,15,20,1);padding:14px 16px;} .H05 .badge{padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.12);font-size:.8rem;color:rgba(255,255,255,.8)}
+
+    .H06{background:rgba(255,255,255,.04);padding:16px;border-bottom:1px solid rgba(255,255,255,.08);} .H06 .brand span{color:#fff;} .H06 .brand{color:var(--accent);} 
+
+    .H07{background:rgba(10,12,16,.78);padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.10);} .H07 .nav{gap:10px;} .H07 .nav a{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.06);} .H07 .nav a:hover{background:rgba(255,255,255,.12);} 
+
+    .H08{background:rgba(17,24,39,.7);padding:16px;} .H08 .search{flex:1;max-width:360px;} .H08 input{width:100%;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:9px 10px;color:#fff;}
+
+    .H09{background:rgba(10,12,16,.76);padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.10);} .H09 .btn{border-radius:999px;}
+
+    .H10{background:rgba(255,255,255,.03);padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);} .H10 .brand{font-weight:900;} .H10 .btn{background:transparent;}
+
+    .H11{background:rgba(10,12,16,1);padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);} .H11 .nav a{font-weight:700;}
+
+    .H12{background:rgba(17,24,39,.8);padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.10);} .H12 .brand{font-size:1.05rem;} .H12 .nav a{font-size:.9rem;opacity:.88;}
+
+    .H13{background:rgba(10,12,16,.6);padding:18px 16px;border-bottom:1px solid rgba(255,255,255,.08);} .H13 .brand{font-size:1.2rem;} 
+
+    .H14{background:rgba(255,255,255,.04);padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);} .H14 .nav a{position:relative;} .H14 .nav a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:2px;background:var(--accent);transition:width .2s;} .H14 .nav a:hover::after{width:100%;}
+
+    .H15{background:rgba(17,24,39,.65);padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.10);} .H15 .btn{background:rgba(255,255,255,.10);} .H15 .btn:hover{background:rgba(255,255,255,.14);} 
+
+    /* ========== FOOTER TEMPLATES (F01..F15) ========== */
+    .footerBase{padding:18px 16px;border-top:1px solid rgba(255,255,255,.10);background:rgba(10,12,16,.96);} 
+    .footerBase .cols{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:14px;}
+    .footerBase h3{font-size:1rem;font-weight:900;margin-bottom:8px;}
+    .footerBase h4{font-size:.95rem;font-weight:900;margin-bottom:8px;}
+    .footerBase p,.footerBase a{color:rgba(255,255,255,.75);font-size:.9rem;line-height:1.45;}
+    .footerBase a:hover{color:#fff;}
+    .footerBase .bottom{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+
+    .F01{background:rgba(10,12,16,.96);} 
+
+    .F02{background:rgba(17,24,39,.92);} 
+
+    .F03{background:rgba(10,12,16,.96);} .F03 .bottom{justify-content:center;}
+
+    .F04{background:rgba(10,12,16,.96);} .F04 .cols{grid-template-columns:1.5fr 1fr 1fr;}
+
+    .F05{background:rgba(255,255,255,.04);backdrop-filter:blur(12px);} 
+
+    .F06{background:rgba(10,12,16,1);} .F06 a{font-weight:700;}
+
+    .F07{background:rgba(10,12,16,.96);} .F07 .cols{grid-template-columns:1fr 1fr;} .F07 .bottom{border-top:none;margin-top:10px;padding-top:0;}
+
+    .F08{background:rgba(17,24,39,.92);} .F08 .chip{display:inline-block;border:1px solid rgba(255,255,255,.14);padding:6px 10px;border-radius:999px;margin:6px 6px 0 0;}
+
+    .F09{background:rgba(10,12,16,.96);} .F09 .newsletter{display:flex;gap:8px;flex-wrap:wrap;} .F09 input{flex:1;min-width:180px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:10px;color:#fff;}
+
+    .F10{background:rgba(10,12,16,.96);} .F10 .cols{grid-template-columns:1fr 1fr 1fr;} 
+
+    .F11{background:rgba(17,24,39,.92);} .F11 .bottom{border-top:1px dashed rgba(255,255,255,.14);} 
+
+    .F12{background:rgba(10,12,16,.96);} .F12 .brand{font-size:1.1rem;} 
+
+    .F13{background:rgba(10,12,16,.96);} .F13 .cols{grid-template-columns:1.2fr 1.2fr;} 
+
+    .F14{background:rgba(255,255,255,.03);backdrop-filter:blur(12px);} .F14 .bottom{border-top:1px solid rgba(255,255,255,.06);} 
+
+    .F15{background:rgba(10,12,16,.96);} .F15 .topline{padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+
+    @media (max-width: 900px){
+      .footerBase .cols{grid-template-columns:1fr 1fr;}
+    }
+    @media (max-width: 560px){
+      .footerBase .cols{grid-template-columns:1fr;}
+    }
+
+    .note{margin-top:14px;color:rgba(255,255,255,.6);font-size:.86rem;line-height:1.35;}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Header & Footer Templates – Preview</h1>
+    <p class="sub">Choose a Header (H01–H15) and Footer (F01–F15). This is a visual preview page so you can decide what to implement in your registration page.</p>
+
+    <div class="toolbar">
+      <div class="pill">
+        <label for="headerPick">Header</label>
+        <select id="headerPick">
+          <option value="H01">H01 – Glass Simple</option>
+          <option value="H02">H02 – Solid + White CTA</option>
+          <option value="H03">H03 – Floating Rounded</option>
+          <option value="H04">H04 – Minimal Dark</option>
+          <option value="H05">H05 – Brand Badge</option>
+          <option value="H06">H06 – Accent Brand</option>
+          <option value="H07">H07 – Pill Links</option>
+          <option value="H08">H08 – With Search</option>
+          <option value="H09">H09 – Rounded CTA</option>
+          <option value="H10">H10 – Ultra Minimal</option>
+          <option value="H11">H11 – Strong Nav</option>
+          <option value="H12">H12 – Compact</option>
+          <option value="H13">H13 – Taller Hero Nav</option>
+          <option value="H14">H14 – Underline Hover</option>
+          <option value="H15">H15 – Soft Buttons</option>
+        </select>
+      </div>
+
+      <div class="pill">
+        <label for="footerPick">Footer</label>
+        <select id="footerPick">
+          <option value="F01">F01 – Classic 4-col</option>
+          <option value="F02">F02 – Dark Panel</option>
+          <option value="F03">F03 – Centered Bottom</option>
+          <option value="F04">F04 – 3-col Simple</option>
+          <option value="F05">F05 – Glass Footer</option>
+          <option value="F06">F06 – Bold Links</option>
+          <option value="F07">F07 – Minimal 2-col</option>
+          <option value="F08">F08 – With Chips</option>
+          <option value="F09">F09 – Newsletter</option>
+          <option value="F10">F10 – 3-col Links</option>
+          <option value="F11">F11 – Dashed Divider</option>
+          <option value="F12">F12 – Brand Focus</option>
+          <option value="F13">F13 – Split 2-wide</option>
+          <option value="F14">F14 – Glass Light</option>
+          <option value="F15">F15 – Topline + Links</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="note">Tip: Use the dropdowns to preview different combinations. When you decide, tell me your pick like: <strong>Header H03 + Footer F09</strong>.</p>
+
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <template id="tpl">
+    <section class="preview">
+      <div class="meta">
+        <div>
+          <div class="name"></div>
+          <div class="hint"></div>
+        </div>
+      </div>
+      <div class="canvas">
+        <header class="header"></header>
+        <div class="hero">Preview content area (your form would be here). This is only for layout/feel.</div>
+        <footer class="footer footerBase"></footer>
+      </div>
+    </section>
+  </template>
+
+  <script>
+    const headerOptions = {
+      H01: { name: 'H01 – Glass Simple', hint: 'Glass bar, subtle links, great for apps.' },
+      H02: { name: 'H02 – Solid + White CTA', hint: 'Strong contrast CTA button.' },
+      H03: { name: 'H03 – Floating Rounded', hint: 'Floating rounded container for premium feel.' },
+      H04: { name: 'H04 – Minimal Dark', hint: 'Straightforward minimal dark nav.' },
+      H05: { name: 'H05 – Brand Badge', hint: 'Adds a small status/badge by brand.' },
+      H06: { name: 'H06 – Accent Brand', hint: 'Brand uses accent as primary.' },
+      H07: { name: 'H07 – Pill Links', hint: 'Pill buttons for navigation links.' },
+      H08: { name: 'H08 – With Search', hint: 'Search input in the header.' },
+      H09: { name: 'H09 – Rounded CTA', hint: 'Rounded CTA for friendly UI.' },
+      H10: { name: 'H10 – Ultra Minimal', hint: 'Cleanest and lightest header.' },
+      H11: { name: 'H11 – Strong Nav', hint: 'Heavier nav typography.' },
+      H12: { name: 'H12 – Compact', hint: 'Tighter spacing for small screens.' },
+      H13: { name: 'H13 – Taller Hero Nav', hint: 'More spacious header for landing pages.' },
+      H14: { name: 'H14 – Underline Hover', hint: 'Underline hover effect.' },
+      H15: { name: 'H15 – Soft Buttons', hint: 'Soft button-like CTAs.' },
+    };
+
+    const footerOptions = {
+      F01: { name: 'F01 – Classic 4-col', hint: 'Standard multi-column footer.' },
+      F02: { name: 'F02 – Dark Panel', hint: 'Stronger panel footer background.' },
+      F03: { name: 'F03 – Centered Bottom', hint: 'Centered copyright row.' },
+      F04: { name: 'F04 – 3-col Simple', hint: 'Less dense 3 columns.' },
+      F05: { name: 'F05 – Glass Footer', hint: 'Glass effect like header.' },
+      F06: { name: 'F06 – Bold Links', hint: 'Heavier link emphasis.' },
+      F07: { name: 'F07 – Minimal 2-col', hint: 'Very simple layout.' },
+      F08: { name: 'F08 – With Chips', hint: 'Tag/chip-style links.' },
+      F09: { name: 'F09 – Newsletter', hint: 'Has newsletter signup row.' },
+      F10: { name: 'F10 – 3-col Links', hint: 'Three columns balanced.' },
+      F11: { name: 'F11 – Dashed Divider', hint: 'Dashed divider for style.' },
+      F12: { name: 'F12 – Brand Focus', hint: 'Brand callout heavier.' },
+      F13: { name: 'F13 – Split 2-wide', hint: 'Two wide sections.' },
+      F14: { name: 'F14 – Glass Light', hint: 'Light glass footer style.' },
+      F15: { name: 'F15 – Topline + Links', hint: 'Top row for socials + compact columns.' },
+    };
+
+    function headerHTML(code){
+      const baseLinks = `
+        <nav class="nav">
+          <a href="#">Home</a>
+          <a href="#">Features</a>
+          <a href="#">About</a>
+          <a href="#">Login</a>
+          <a class="btn" href="#">Register</a>
+        </nav>`;
+
+      if(code === 'H03'){
+        return `<div class="wrap"><div class="row"><div class="brand">Task<span>Flow</span></div>${baseLinks}</div></div>`;
+      }
+      if(code === 'H05'){
+        return `<div class="row"><div style="display:flex;align-items:center;gap:10px;"><div class="brand">Task<span>Flow</span></div><span class="badge">v1.0</span></div>${baseLinks}</div>`;
+      }
+      if(code === 'H08'){
+        return `<div class="row"><div class="brand">Task<span>Flow</span></div><div class="search"><input placeholder="Search…" /></div>${baseLinks}</div>`;
+      }
+      return `<div class="row"><div class="brand">Task<span>Flow</span></div>${baseLinks}</div>`;
+    }
+
+    function footerHTML(code){
+      const cols = `
+        <div class="cols">
+          <div>
+            <h3>Task<span style="color:var(--accent)">Flow</span></h3>
+            <p>Clean task management UI for teams and individuals. Preview footer templates here.</p>
+          </div>
+          <div>
+            <h4>Product</h4>
+            <p><a href="#">Features</a></p>
+            <p><a href="#">Pricing</a></p>
+            <p><a href="#">Changelog</a></p>
+          </div>
+          <div>
+            <h4>Company</h4>
+            <p><a href="#">About</a></p>
+            <p><a href="#">Careers</a></p>
+            <p><a href="#">Contact</a></p>
+          </div>
+          <div>
+            <h4>Legal</h4>
+            <p><a href="#">Privacy</a></p>
+            <p><a href="#">Terms</a></p>
+            <p><a href="#">Security</a></p>
+          </div>
+        </div>`;
+
+      const bottom = `
+        <div class="bottom">
+          <div>© 2026 TaskFlow</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Support</a>
+          </div>
+        </div>`;
+
+      if(code === 'F07'){
+        return `<div class="cols"><div><h3>Task<span style="color:var(--accent)">Flow</span></h3><p>Minimal footer for clean UI.</p></div><div><h4>Links</h4><p><a href="#">Privacy</a></p><p><a href="#">Terms</a></p><p><a href="#">Support</a></p></div></div><div class="bottom"><div>© 2026 TaskFlow</div></div>`;
+      }
+      if(code === 'F08'){
+        return `<div class="cols" style="grid-template-columns:1.3fr 1fr 1fr;"><div><h3>Task<span style="color:var(--accent)">Flow</span></h3><p>Footer with chips/tags.</p><div><span class="chip">Docs</span><span class="chip">API</span><span class="chip">Status</span></div></div><div><h4>Company</h4><p><a href="#">About</a></p><p><a href="#">Careers</a></p></div><div><h4>Legal</h4><p><a href="#">Privacy</a></p><p><a href="#">Terms</a></p></div></div>${bottom}`;
+      }
+      if(code === 'F09'){
+        return `<div class="cols" style="grid-template-columns:1.4fr 1fr 1fr;"><div><h3>Task<span style="color:var(--accent)">Flow</span></h3><p>Newsletter footer variant.</p><div class="newsletter"><input placeholder="Email address" /><button class="btn">Subscribe</button></div></div><div><h4>Product</h4><p><a href="#">Features</a></p><p><a href="#">Pricing</a></p></div><div><h4>Legal</h4><p><a href="#">Privacy</a></p><p><a href="#">Terms</a></p></div></div>${bottom}`;
+      }
+      if(code === 'F15'){
+        return `<div class="topline"><div class="brand">Task<span>Flow</span></div><div style="display:flex;gap:10px;flex-wrap:wrap;"><a href="#">Twitter</a><a href="#">GitHub</a><a href="#">LinkedIn</a></div></div>${cols}${bottom}`;
+      }
+      if(code === 'F04'){
+        return `<div class="cols" style="grid-template-columns:1.5fr 1fr 1fr;"><div><h3>Task<span style="color:var(--accent)">Flow</span></h3><p>Clean three-column footer.</p></div><div><h4>Links</h4><p><a href="#">Docs</a></p><p><a href="#">Support</a></p></div><div><h4>Legal</h4><p><a href="#">Privacy</a></p><p><a href="#">Terms</a></p></div></div>${bottom}`;
+      }
+
+      return `${cols}${bottom}`;
+    }
+
+    function buildGrid(){
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+
+      // show 6 previews at a time: chosen header with 3 footers + chosen footer with 3 headers
+      const headerPick = document.getElementById('headerPick').value;
+      const footerPick = document.getElementById('footerPick').value;
+
+      const headerList = Object.keys(headerOptions);
+      const footerList = Object.keys(footerOptions);
+
+      const otherHeaders = headerList.filter(h => h !== headerPick).slice(0,3);
+      const otherFooters = footerList.filter(f => f !== footerPick).slice(0,3);
+
+      const combos = [
+        {h: headerPick, f: footerPick, label: 'Selected Combo'},
+        ...otherFooters.map(f => ({h: headerPick, f, label: 'Same header, different footer'})),
+        ...otherHeaders.map(h => ({h, f: footerPick, label: 'Different header, same footer'})),
+      ];
+
+      const tpl = document.getElementById('tpl');
+      combos.forEach(c => {
+        const node = tpl.content.cloneNode(true);
+        node.querySelector('.name').textContent = `${headerOptions[c.h].name} + ${footerOptions[c.f].name}`;
+        node.querySelector('.hint').textContent = c.label;
+
+        const header = node.querySelector('.header');
+        header.className = `header ${c.h}`;
+        header.innerHTML = headerHTML(c.h);
+
+        const footer = node.querySelector('.footer');
+        footer.className = `footer footerBase ${c.f}`;
+        footer.innerHTML = footerHTML(c.f);
+
+        grid.appendChild(node);
+      });
+    }
+
+    document.getElementById('headerPick').addEventListener('change', buildGrid);
+    document.getElementById('footerPick').addEventListener('change', buildGrid);
+    buildGrid();
+  </script>
+</body>
+</html>
