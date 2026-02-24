@@ -1,0 +1,79 @@
+.tf-toast-container{
+  position:fixed;
+  top:1rem;
+  right:1rem;
+  z-index:2147483647;
+  display:flex;
+  flex-direction:column;
+  gap:.75rem;
+  width:min(360px, calc(100vw - 2rem));
+
+  /* Ensure it's visible even if some page CSS affects containers */
+  visibility: visible;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.tf-toast-container *{ pointer-events: auto; }
+
+.tf-toast{
+  background:#111827;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:.75rem;
+  box-shadow:0 12px 35px rgba(0,0,0,.35);
+  padding:.85rem .95rem;
+  overflow:hidden;
+}
+
+.tf-toast__row{
+  display:flex;
+  align-items:flex-start;
+  gap:.75rem;
+}
+
+.tf-toast__icon{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  margin-top:.35rem;
+  flex:0 0 auto;
+}
+
+.tf-toast--success .tf-toast__icon{background:#22c55e;}
+.tf-toast--error .tf-toast__icon{background:#ef4444;}
+.tf-toast--info .tf-toast__icon{background:#3b82f6;}
+.tf-toast--warning .tf-toast__icon{background:#f59e0b;}
+
+.tf-toast__title{
+  font-weight:700;
+  font-size:.95rem;
+  line-height:1.15;
+  margin:0;
+}
+
+.tf-toast__message{
+  font-size:.9rem;
+  opacity:.95;
+  margin:.15rem 0 0;
+}
+
+.tf-toast__progress{
+  height:3px;
+  background:rgba(255,255,255,.15);
+  margin-top:.75rem;
+  border-radius:999px;
+  overflow:hidden;
+}
+
+.tf-toast__bar{
+  height:100%;
+  width:100%;
+  transform-origin:left;
+  background:rgba(255,255,255,.75);
+}
+
+@keyframes tfToastBar {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}

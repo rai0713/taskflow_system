@@ -2,7 +2,7 @@ const loginForm = document.getElementById('login-form');
 const loginButton = loginForm.querySelector('button[type="submit"]');
 const registerLink = document.querySelector('a[href="registration/index.html"]');
 const messageDisplay = document.createElement('div');
-const loginPasswordIcon = document.querySelector('#paswordIcon');
+const loginPasswordIcon = document.querySelector('#passwordIcon');
 const passwordField = document.querySelector('#login-password');
 messageDisplay.id = 'message-display';
 loginForm.appendChild(messageDisplay);

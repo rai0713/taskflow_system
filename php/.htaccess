@@ -1,6 +1,6 @@
+# Allow PHP endpoints for this project.
+# The previous referer-based restriction was for a different project path and caused 403 errors.
+
 <FilesMatch "\.php$">
-    <If "%{HTTP_REFERER} =~ m#^http://localhost/alpuerto_act3/#">
-        Require all granted
-    </If>
-    Require all denied
+    Require all granted
 </FilesMatch>

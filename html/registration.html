@@ -1,520 +1,426 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>TaskFlow - Register</title>
 
   <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
-  <!-- Cache-bust to ensure the browser fetches the latest CSS immediately -->
-  <link rel="stylesheet" href="../css/register.css?v=2">
+  <!-- Original registration styling -->
+  <link rel="stylesheet" href="../css/register.css">
+
+  <!-- Theme + toast + page-specific overrides -->
+  <link rel="stylesheet" href="../css/theme.css">
+  <link rel="stylesheet" href="../css/components/toast.css">
+  <link rel="stylesheet" href="../css/pages/registration.css">
 
 </head>
+
 <body>
+  <div id="app-toast-container" class="tf-toast-container" aria-live="polite" aria-atomic="true"></div>
 
-<!-- Page background/hero wrapper -->
-<div class="tf-page">
+  <!-- Page background/hero wrapper -->
+  <div class="tf-page">
 
-<header>
-  <!-- H01 – Glass Simple (custom) -->
-  <nav class="tf-header H01" aria-label="Primary navigation">
-    <div class="tf-header__inner">
-      <a class="tf-logo" href="../">Task<span>Flow</span></a>
-      <div class="tf-header__links">
-        <a href="#">Home</a>
-        <a href="index.html">Login</a>
-              </div>
-    </div>
-  </nav>
-</header>
-
-
-
-
-  <section class="container tf-auth">
-    <div class="container-fluid bg-white p-4 rounded shadow tf-card">
-      <h2 class="text-center mb-2">Registration Form</h2>
-      <p class="text-center text-muted mb-4 tf-subtitle">Complete the steps to create your account</p>
-
-      <form id="sign-up-form" action="../php/register.php" method="POST">
-
-        
-        <!-- Stepper / Progress -->
-        <div class="tf-stepper mb-3" aria-label="Registration progress">
-          <div class="tf-stepper__track" aria-hidden="true"><span class="tf-stepper__bar" id="tf-stepper-bar"></span></div>
-          <div class="tf-stepper__steps" role="list">
-            <button type="button" class="tf-step tf-step--active" data-step="0" aria-current="step">Personal</button>
-            <button type="button" class="tf-step" data-step="1">Address</button>
-            <button type="button" class="tf-step" data-step="2">Account</button>
-            <button type="button" class="tf-step" data-step="3">Security</button>
+    <header>
+      <!-- H01 – Glass Simple (custom) -->
+      <nav class="tf-header H01" aria-label="Primary navigation">
+        <div class="tf-header__inner">
+          <a class="tf-logo" href="../">Task<span>Flow</span></a>
+          <div class="tf-header__links">
+            <a href="#">Home</a>
+            <a href="index.html">Login</a>
           </div>
         </div>
+      </nav>
+    </header>
 
-        <!-- Panels -->
-        <div class="tf-panels">
 
-          <!-- Step 1: Personal -->
-          <section class="tf-panel is-active" data-step="0">
-            <div class="row g-3">
-              <div class="col-12">
-                <h6 class="my-1 mt-2">Personal Information</h6>
-                <hr>
-              </div>
 
-              <div class="col-md-4">
-                <label for="id-no" class="form-label required">ID No.</label>
-                <input type="text" class="form-control" id="id-no" name="id-no" placeholder="Ex. XXXX-XXXX">
-                <div class="valid-feedback"></div>
-                <div class="invalid-feedback"></div>
-              </div>
 
-              <div class="col-md-4">
-                <label for="first-name" class="form-label required">First name</label>
-                <input type="text" class="form-control" id="first-name" name="first_name" placeholder="Ex. John">
-                <div class="valid-feedback"></div>
-                <div class="invalid-feedback"></div>
-              </div>
+    <section class="container tf-auth">
+      <div class="container-fluid bg-white p-4 rounded shadow tf-card">
+        <h2 class="text-center mb-2">Registration Form</h2>
+        <p class="text-center text-muted mb-4 tf-subtitle">Complete the steps to create your account</p>
 
-              <div class="col-md-4">
-                <label for="middle_initial" class="form-label">Middle Name <span style="color: red;">(Optional)</span></label>
-                <input type="text" class="form-control" id="middle-name" name="middle_initial" placeholder="Ex. Smith">
-                <div class="valid-feedback"></div>
-                <div class="invalid-feedback"></div>
-              </div>
+        <form id="sign-up-form" action="../php/register.php" method="POST" autocomplete="off">
 
-              <div class="col-md-4">
-                <label for="last-name" class="form-label required">Last name</label>
-                <input type="text" class="form-control" id="last-name" name="last_name" placeholder="Ex. Doe">
-                <div class="valid-feedback"></div>
-                <div class="invalid-feedback"></div>
-              </div>
 
-              <div class="col-md-4">
-                <label for="ext-name" class="form-label">Extension Name <span style="color: red;">(Optional)</span></label>
-                <div class="dropdown">
-                  <button class="btn btn-light dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" id="extension-name">
-                    None(default)
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li><a tabindex="-1" href="#" class="select-option" data-value="Sr.">Sr.</a></li>
-                    <li><a tabindex="-1" href="#" class="select-option" data-value="Jr.">Jr.</a></li>
-                    <li class="dropdown-submenu">
-                      <a class="dropdown-item test" tabindex="-1" href="#">Other<span class="caret"></span></a>
-                      <div class="input-submenu">
-                        <label for="other-extension">Input here:</label>
-                        <input type="text" id="other-extension" class="form-control" placeholder="Enter other extension">
-                        <input type="hidden" name="selected-extension" id="selected-extension">
-                        <div class="error-message" id="error-message"></div>
-                        <div class="ordinal-number" id="ordinal-number"></div>
-                        <button type="button" class="btn btn-primary submit-btn">Submit</button>
-                      </div>
-                    </li>
-                  </ul>
+          <!-- Stepper / Progress -->
+          <div class="tf-stepper mb-3" aria-label="Registration progress">
+            <div class="tf-stepper__track" aria-hidden="true"><span class="tf-stepper__bar" id="tf-stepper-bar"></span>
+            </div>
+            <div class="tf-stepper__steps" role="list">
+              <button type="button" class="tf-step tf-step--active" data-step="0" aria-current="step">Personal</button>
+              <button type="button" class="tf-step" data-step="1">Address</button>
+              <button type="button" class="tf-step" data-step="2">Account</button>
+              <button type="button" class="tf-step" data-step="3">Security</button>
+            </div>
+          </div>
+
+          <!-- Panels -->
+          <div class="tf-panels">
+
+            <!-- Step 1: Personal -->
+            <section class="tf-panel is-active" data-step="0">
+              <div class="row g-3">
+                <div class="col-12">
+                  <h6 class="my-1 mt-2">Personal Information</h6>
+                  <hr>
                 </div>
-              </div>
 
-              <div class="col-md-4 form-group">
-                <label for="birthdate" class="form-label required">Birthdate</label>
-                <input type="date" id="birthdate" class="form-control" name="birthdate">
-                <div id="birthdate-error" class="form-text text-danger"></div>
-                <div class="valid-feedback"></div>
-                <div class="invalid-feedback"></div>
-              </div>
-
-              <div class="col-md-4 form-group">
-                <label for="age" class="form-label required">Age</label>
-                <input type="text" id="age" class="form-control" name="age" readonly>
-                <div id="age-error" class="form-text text-danger"></div>
-                <div class="valid-feedback"></div>
-                <div class="invalid-feedback"></div>
-              </div>
-
-              <div class="col-md-4">
-                <label for="email-form" class="form-label required">Email</label>
-                <input type="email" class="form-control" id="email-form" name="email" aria-describedby="email-formFeedback" placeholder="johndoe@gmail.com">
-                <div class="valid-feedback"></div>
-                <div class="invalid-feedback"></div>
-              </div>
-
-              <div class="col-md-4">
-                <label for="sex" class="form-label required">Sex</label>
-                <select class="form-select" id="sex" name="sex" aria-describedby="sexFeedback">
-                  <option selected disabled value="">Choose...</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
-                <div class="invalid-feedback"></div>
-                <div class="valid-feedback"></div>
-              </div>
-
-                          </div>
-          </section>
-
-          <!-- Step 2: Address -->
-          <section class="tf-panel" data-step="1">
-            <div class="row g-3">
-              <div class="col-12">
-                <h6 class="my-1 mt-2">Address Information</h6>
-                <hr>
-              </div>
-
-              <div class="col-md-4">
-                <label for="purok-street" class="form-label required">Purok</label>
-                <input type="text" class="form-control" id="purok-street" aria-describedby="purok-streetFeedback" name="purok_barangay" placeholder="Purok 9">
-                <div class="invalid-feedback"></div>
-                <div class="valid-feedback"></div>
-              </div>
-
-              <div class="col-md-4">
-                <label for="barangay" class="form-label required">Barangay</label>
-                <input type="text" class="form-control" id="barangay" aria-describedby="barangayFeedback" placeholder="Sanghan">
-                <div class="invalid-feedback"></div>
-                <div class="valid-feedback"></div>
-              </div>
-
-              <div class="col-md-4">
-                <label for="city-form" class="form-label required">City/Municipality</label>
-                <input type="text" class="form-control" id="city-form" name="city_municipality" aria-describedby="city-formFeedback" placeholder="Cabadbaran City">
-                <div class="invalid-feedback"></div>
-                <div class="valid-feedback"></div>
-              </div>
-
-              <div class="col-md-4">
-                <label for="province" class="form-label required">Province</label>
-                <input type="text" class="form-control" id="province" name="province" aria-describedby="provinceFeedback" placeholder="Agusan Del Norte">
-                <div class="invalid-feedback"></div>
-                <div class="valid-feedback"></div>
-              </div>
-
-              <div class="col-md-4">
-                <label for="country-form" class="form-label required">Country</label>
-                <input type="text" class="form-control" id="country-form" name="country" aria-describedby="country-formFeedback" placeholder="Philippines">
-                <div class="invalid-feedback"></div>
-                <div class="valid-feedback"></div>
-              </div>
-
-              <div class="col-md-4">
-                <label for="zipCode" class="form-label required">Zip Code</label>
-                <input type="text" class="form-control" id="zipCode" name="zip_code" aria-describedby="zipCodeFeedback" placeholder="8605">
-                <div class="invalid-feedback"></div>
-                <div class="valid-feedback"></div>
-              </div>
-
-              </div>
-          </section>
-
-          <!-- Step 3: Account -->
-          <section class="tf-panel" data-step="2">
-            <div class="row g-3">
-              <div class="col-12">
-                <h6 class="my-1 mt-2">Account Information</h6>
-                <hr>
-              </div>
-
-              <div class="col-md-4">
-                <label for="user-name" class="form-label required">Username</label>
-                <div class="input-group has-validation">
-                  <input type="text" class="form-control" id="user-name" name="username" aria-describedby="user-nameFeedback" style="border-radius: 12px;" placeholder="Ex. johndoe20">
+                <div class="col-md-4">
+                  <label for="id-no" class="form-label required">ID No.</label>
+                  <input type="text" class="form-control" id="id-no" name="id-no" placeholder="Ex. XXXX-XXXX"
+                    data-required="1">
                   <div class="valid-feedback"></div>
-                  <div id="user-nameFeedback" class="invalid-feedback"></div>
+                  <div class="invalid-feedback"></div>
                 </div>
-              </div>
 
-              <div class="col-md-4">
-                <label for="password" class="form-label required">Password</label>
-                <div class="input-group has-validation password-wrapper">
-                  <input type="password" class="form-control" id="password" name="password" style="border-bottom-right-radius: 0px; border-top-right-radius: 0px" aria-describedby="passwordFeedback">
-                  <span class="input-group-text">
+                <div class="col-md-4">
+                  <label for="first-name" class="form-label required">First name</label>
+                  <input type="text" class="form-control" id="first-name" name="first_name" placeholder="Ex. John"
+                    data-required="1">
+                  <div class="valid-feedback"></div>
+                  <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="middle_initial" class="form-label">Middle Name <span
+                      style="color: red;">(Optional)</span></label>
+                  <input type="text" class="form-control" id="middle-name" name="middle_initial"
+                    placeholder="Ex. Smith">
+                  <div class="valid-feedback"></div>
+                  <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="last-name" class="form-label required">Last name</label>
+                  <input type="text" class="form-control" id="last-name" name="last_name" placeholder="Ex. Doe"
+                    data-required="1">
+                  <div class="valid-feedback"></div>
+                  <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="ext-name" class="form-label">Extension Name <span
+                      style="color: red;">(Optional)</span></label>
+                  <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
+                      id="extension-name">
+                      None(default)
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a tabindex="-1" href="#" class="select-option" data-value="None(default)">None(Default)</a>
+                      </li>
+                      <li><a tabindex="-1" href="#" class="select-option" data-value="Sr.">Sr.</a></li>
+                      <li><a tabindex="-1" href="#" class="select-option" data-value="Jr.">Jr.</a></li>
+                      <li class="dropdown-submenu">
+                        <a class="dropdown-item test" tabindex="-1" href="#">Other<span class="caret"></span></a>
+                        <div class="input-submenu">
+                          <label for="other-extension">Input here:</label>
+                          <input type="text" id="other-extension" class="form-control"
+                            placeholder="Enter other extension">
+                          <input type="hidden" name="selected-extension" id="selected-extension">
+                          <div class="error-message" id="error-message"></div>
+                          <div class="ordinal-number" id="ordinal-number"></div>
+                          <button type="button" class="btn btn-primary submit-btn w-100 mt-1">Submit</button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="birthdate" class="form-label required">Birthdate</label>
+                  <input type="date" id="birthdate" class="form-control" name="birthdate" data-required="1">
+                  <div id="birthdate-error" class="form-text"></div>
+                  <div class="valid-feedback"></div>
+                  <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="age" class="form-label required">Age</label>
+                  <input type="text" id="age" class="form-control" name="age" readonly>
+                  <div id="age-error" class="form-text"></div>
+                  <div class="valid-feedback"></div>
+                  <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="email-form" class="form-label required">Email</label>
+                  <input type="email" class="form-control" id="email-form" name="email"
+                    aria-describedby="email-formFeedback" placeholder="johndoe@gmail.com" data-required="1">
+                  <div class="valid-feedback"></div>
+                  <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="sex" class="form-label required">Sex</label>
+                  <select class="form-select" id="sex" name="sex" aria-describedby="sexFeedback" data-required="1">
+                    <option selected disabled value="">Choose...</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                  <div class="invalid-feedback"></div>
+                  <div class="valid-feedback"></div>
+                </div>
+
+              </div>
+            </section>
+
+            <!-- Step 2: Address -->
+            <section class="tf-panel" data-step="1">
+              <div class="row g-3">
+                <div class="col-12">
+                  <h6 class="my-1 mt-2">Address Information</h6>
+                  <hr>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="purok-street" class="form-label required">Purok</label>
+                  <input type="text" class="form-control" id="purok-street" aria-describedby="purok-streetFeedback"
+                    name="purok_barangay" placeholder="Purok 9" data-required="1">
+                  <div class="invalid-feedback"></div>
+                  <div class="valid-feedback"></div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="barangay" class="form-label required">Barangay</label>
+                  <input type="text" class="form-control" id="barangay" name="barangay"
+                    aria-describedby="barangayFeedback" placeholder="Sanghan" data-required="1">
+                  <div class="invalid-feedback"></div>
+                  <div class="valid-feedback"></div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="city-form" class="form-label required">City/Municipality</label>
+                  <input type="text" class="form-control" id="city-form" name="city_municipality"
+                    aria-describedby="city-formFeedback" placeholder="Cabadbaran City" data-required="1">
+                  <div class="invalid-feedback"></div>
+                  <div class="valid-feedback"></div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="province" class="form-label required">Province</label>
+                  <input type="text" class="form-control" id="province" name="province"
+                    aria-describedby="provinceFeedback" placeholder="Agusan Del Norte" data-required="1">
+                  <div class="invalid-feedback"></div>
+                  <div class="valid-feedback"></div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="country-form" class="form-label required">Country</label>
+                  <input type="text" class="form-control" id="country-form" name="country"
+                    aria-describedby="country-formFeedback" placeholder="Philippines" data-required="1">
+                  <div class="invalid-feedback"></div>
+                  <div class="valid-feedback"></div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="zipCode" class="form-label required">Zip Code</label>
+                  <input type="text" class="form-control" id="zipCode" name="zip_code"
+                    aria-describedby="zipCodeFeedback" placeholder="8605" data-required="1">
+                  <div class="invalid-feedback"></div>
+                  <div class="valid-feedback"></div>
+                </div>
+
+              </div>
+            </section>
+
+            <!-- Step 3: Account -->
+            <section class="tf-panel" data-step="2">
+              <div class="row g-3">
+                <div class="col-12">
+                  <h6 class="my-1 mt-2">Account Information</h6>
+                  <hr>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="user-name" class="form-label required">Username</label>
+                  <div class="input-group has-validation">
+                    <input type="text" class="form-control" id="user-name" name="username"
+                      aria-describedby="user-nameFeedback" style="border-radius: 12px;" placeholder="Ex. johndoe20"
+                      data-required="1">
+                    <div class="valid-feedback"></div>
+                    <div id="user-nameFeedback" class="invalid-feedback"></div>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="password" class="form-label required">Password</label>
+                  <div class="input-group has-validation password-wrapper">
+                    <input type="password" class="form-control" id="password" name="password"
+                      aria-describedby="passwordFeedback" data-required="1">
                     <button type="button" id="togglePassword" class="toggle-password" aria-label="Show Password">
                       <img src="../assets/icons/visibility_on.svg" alt="Show Password" id="passwordIcon">
                     </button>
-                  </span>
-                  <div class="valid-feedback"></div>
-                  <div class="invalid-feedback"></div>
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                  </div>
+
+                  <div class="password-indicator"></div>
                 </div>
 
-                <div class="password-indicator"></div>
-              </div>
-
-              <div class="col-md-4">
-                <label for="confirm-password" class="form-label required">Confirm Password</label>
-                <div class="input-group has-validation password-wrapper">
-                  <input type="password" class="form-control" id="confirm-password" aria-describedby="confirm-passwordFeedback">
-                  <span class="input-group-text" style="border-bottom-right-radius: 12px; border-top-right-radius: 12px;">
+                <div class="col-md-4">
+                  <label for="confirm-password" class="form-label required">Confirm Password</label>
+                  <div class="input-group has-validation password-wrapper">
+                    <input type="password" class="form-control" id="confirm-password"
+                      aria-describedby="confirm-passwordFeedback" data-required="1">
                     <button type="button" id="toggleConfirmPassword" class="toggle-password" aria-label="Show Password">
                       <img src="../assets/icons/visibility_on.svg" alt="Show Password" id="confirmPasswordIcon">
                     </button>
-                  </span>
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                  </div>
+                </div>
+
+              </div>
+            </section>
+
+            <!-- Step 4: Security -->
+            <section class="tf-panel" data-step="3">
+              <div class="row g-3">
+                <div class="col-12">
+                  <h6 class="my-1 mt-2">Security Questions</h6>
+                  <hr>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="security-question-1" class="form-label required">Security Question 1</label>
+                  <select class="form-select security-question" id="security-question-1" name="security_question_1"
+                    data-required="1">
+                    <option value="" selected disabled>Choose a question...</option>
+                    <option value="pet">What is the name of your first pet?</option>
+                    <option value="school">What was the name of your elementary school?</option>
+                    <option value="city">In what city were you born?</option>
+                    <option value="mother_maiden">What is your mother's maiden name?</option>
+                    <option value="bestfriend">What is the name of your childhood best friend?</option>
+                    <option value="favorite_teacher">What is the name of your favorite teacher?</option>
+                  </select>
                   <div class="valid-feedback"></div>
                   <div class="invalid-feedback"></div>
                 </div>
-              </div>
+
+                <div class="col-md-4">
+                  <label for="security-answer-1" class="form-label required">Answer 1</label>
+                  <div class="input-group has-validation password-wrapper">
+                    <input type="password" class="form-control" id="security-answer-1" name="security_answer_1"
+                      autocomplete="off" data-required="1">
+                    <button type="button" class="toggle-password" id="toggleSA1" aria-label="Show Password">
+                      <img src="../assets/icons/visibility_on.svg" alt="Show Password" id="sa1Icon">
+                    </button>
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                  </div>
+                </div>
+
+                <div class="col-md-4"></div>
+
+                <div class="col-md-4">
+                  <label for="security-question-2" class="form-label required">Security Question 2</label>
+                  <select class="form-select security-question" id="security-question-2" name="security_question_2"
+                    data-required="1">
+                    <option value="" selected disabled>Choose a question...</option>
+                    <option value="pet">What is the name of your first pet?</option>
+                    <option value="school">What was the name of your elementary school?</option>
+                    <option value="city">In what city were you born?</option>
+                    <option value="mother_maiden">What is your mother's maiden name?</option>
+                    <option value="bestfriend">What is the name of your childhood best friend?</option>
+                    <option value="favorite_teacher">What is the name of your favorite teacher?</option>
+                  </select>
+                  <div class="valid-feedback"></div>
+                  <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="security-answer-2" class="form-label required">Answer 2</label>
+                  <div class="input-group has-validation password-wrapper">
+                    <input type="password" class="form-control" id="security-answer-2" name="security_answer_2"
+                      autocomplete="off" data-required="1">
+                    <button type="button" class="toggle-password" id="toggleSA2" aria-label="Show Password">
+                      <img src="../assets/icons/visibility_on.svg" alt="Show Password" id="sa2Icon">
+                    </button>
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                  </div>
+                </div>
+
+                <div class="col-md-4"></div>
+
+                <div class="col-md-4">
+                  <label for="security-question-3" class="form-label required">Security Question 3</label>
+                  <select class="form-select security-question" id="security-question-3" name="security_question_3"
+                    data-required="1">
+                    <option value="" selected disabled>Choose a question...</option>
+                    <option value="pet">What is the name of your first pet?</option>
+                    <option value="school">What was the name of your elementary school?</option>
+                    <option value="city">In what city were you born?</option>
+                    <option value="mother_maiden">What is your mother's maiden name?</option>
+                    <option value="bestfriend">What is the name of your childhood best friend?</option>
+                    <option value="favorite_teacher">What is the name of your favorite teacher?</option>
+                  </select>
+                  <div class="valid-feedback"></div>
+                  <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="security-answer-3" class="form-label required">Answer 3</label>
+                  <div class="input-group has-validation password-wrapper">
+                    <input type="password" class="form-control" id="security-answer-3" name="security_answer_3"
+                      autocomplete="off" data-required="1">
+                    <button type="button" class="toggle-password" id="toggleSA3" aria-label="Show Password">
+                      <img src="../assets/icons/visibility_on.svg" alt="Show Password" id="sa3Icon">
+                    </button>
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                  </div>
+                </div>
+
+                <div class="col-md-4"></div>
 
               </div>
-          </section>
+            </section>
 
-          <!-- Step 4: Security -->
-          <section class="tf-panel" data-step="3">
-            <div class="row g-3">
-              <div class="col-12">
-                <h6 class="my-1 mt-2">Security Questions</h6>
-                <hr>
-              </div>
-
-              <div class="col-md-4">
-                <label for="security-question-1" class="form-label required">Security Question 1</label>
-                <select class="form-select security-question" id="security-question-1" name="security_question_1" required>
-                  <option value="" selected disabled>Choose a question...</option>
-                  <option value="pet">What is the name of your first pet?</option>
-                  <option value="school">What was the name of your elementary school?</option>
-                  <option value="city">In what city were you born?</option>
-                  <option value="mother_maiden">What is your mother’s maiden name?</option>
-                  <option value="bestfriend">What is the name of your childhood best friend?</option>
-                  <option value="favorite_teacher">What is the name of your favorite teacher?</option>
-                </select>
-              </div>
-
-              <div class="col-md-4">
-                <label for="security-answer-1" class="form-label required">Answer 1</label>
-                <input type="text" class="form-control" id="security-answer-1" name="security_answer_1" autocomplete="off" required>
-              </div>
-
-              <div class="col-md-4"></div>
-
-              <div class="col-md-4">
-                <label for="security-question-2" class="form-label required">Security Question 2</label>
-                <select class="form-select security-question" id="security-question-2" name="security_question_2" required>
-                  <option value="" selected disabled>Choose a question...</option>
-                  <option value="pet">What is the name of your first pet?</option>
-                  <option value="school">What was the name of your elementary school?</option>
-                  <option value="city">In what city were you born?</option>
-                  <option value="mother_maiden">What is your mother’s maiden name?</option>
-                  <option value="bestfriend">What is the name of your childhood best friend?</option>
-                  <option value="favorite_teacher">What is the name of your favorite teacher?</option>
-                </select>
-              </div>
-
-              <div class="col-md-4">
-                <label for="security-answer-2" class="form-label required">Answer 2</label>
-                <input type="text" class="form-control" id="security-answer-2" name="security_answer_2" autocomplete="off" required>
-              </div>
-
-              <div class="col-md-4"></div>
-
-              <div class="col-md-4">
-                <label for="security-question-3" class="form-label required">Security Question 3</label>
-                <select class="form-select security-question" id="security-question-3" name="security_question_3" required>
-                  <option value="" selected disabled>Choose a question...</option>
-                  <option value="pet">What is the name of your first pet?</option>
-                  <option value="school">What was the name of your elementary school?</option>
-                  <option value="city">In what city were you born?</option>
-                  <option value="mother_maiden">What is your mother’s maiden name?</option>
-                  <option value="bestfriend">What is the name of your childhood best friend?</option>
-                  <option value="favorite_teacher">What is the name of your favorite teacher?</option>
-                </select>
-              </div>
-
-              <div class="col-md-4">
-                <label for="security-answer-3" class="form-label required">Answer 3</label>
-                <input type="text" class="form-control" id="security-answer-3" name="security_answer_3" autocomplete="off" required>
-              </div>
-
-              <div class="col-md-4"></div>
-
-                          </div>
-          </section>
-
-        </div>
-
-        <script>
-          // Multi-step UX for the long registration form (Next/Back + progress)
-          (function () {
-            const form = document.getElementById('sign-up-form');
-            if (!form) return;
-
-            const panels = Array.from(form.querySelectorAll('.tf-panel'));
-            const steps = Array.from(form.querySelectorAll('.tf-step'));
-            const bar = document.getElementById('tf-stepper-bar');
-
-            // We use a single shared bottom action bar for navigation
-            const bottomPrev = document.getElementById('tf-bottom-prev');
-            const bottomNext = document.getElementById('tf-bottom-next');
-            const bottomSubmit = document.getElementById('tf-bottom-submit');
-
-            function focusFirstField(panel) {
-              const el = panel.querySelector('input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])');
-              if (el) el.focus({ preventScroll: true });
-            }
-
-            function setBottomActions(idx) {
-              if (!bottomPrev || !bottomNext || !bottomSubmit) return;
-
-              bottomPrev.style.display = (idx === 0) ? 'none' : '';
-
-              const isLast = idx === (panels.length - 1);
-              bottomNext.style.display = isLast ? 'none' : '';
-              bottomSubmit.style.display = isLast ? '' : 'none';
-            }
-
-            function setActiveStep(idx) {
-              panels.forEach(p => p.classList.toggle('is-active', Number(p.dataset.step) === idx));
-              steps.forEach(s => {
-                const isActive = Number(s.dataset.step) === idx;
-                s.classList.toggle('tf-step--active', isActive);
-                if (isActive) s.setAttribute('aria-current', 'step');
-                else s.removeAttribute('aria-current');
-              });
-
-              const progress = (idx) / (steps.length - 1);
-              if (bar) bar.style.width = (progress * 100) + '%';
-
-              const activePanel = panels.find(p => Number(p.dataset.step) === idx);
-              if (activePanel) focusFirstField(activePanel);
-
-              setBottomActions(idx);
-
-              // keep URL hash in sync (optional)
-              try { history.replaceState(null, '', '#step-' + (idx + 1)); } catch (e) {}
-            }
-
-            function validatePanel(panel) {
-              // Use native HTML validity where possible.
-              // Only validate inputs/selects that exist inside the current panel.
-              const fields = Array.from(panel.querySelectorAll('input, select, textarea'))
-                .filter(el => el.type !== 'hidden' && !el.disabled);
-
-              let ok = true;
-              fields.forEach(el => {
-                // Do not force validation for optional empty fields
-                if (!el.required && !el.value) return;
-
-                if (typeof el.reportValidity === 'function') {
-                  const valid = el.reportValidity();
-                  if (!valid) ok = false;
-                } else if (typeof el.checkValidity === 'function') {
-                  const valid = el.checkValidity();
-                  if (!valid) ok = false;
-                }
-              });
-
-              return ok;
-            }
-
-            function currentIndex() {
-              const active = panels.find(p => p.classList.contains('is-active'));
-              return active ? Number(active.dataset.step) : 0;
-            }
-
-            function goNext() {
-              const idx = currentIndex();
-              const panel = panels.find(p => Number(p.dataset.step) === idx);
-              if (panel && !validatePanel(panel)) return;
-              setActiveStep(Math.min(idx + 1, panels.length - 1));
-            }
-
-            function goPrev() {
-              const idx = currentIndex();
-              setActiveStep(Math.max(idx - 1, 0));
-            }
-
-            if (bottomNext) bottomNext.addEventListener('click', goNext);
-            if (bottomPrev) bottomPrev.addEventListener('click', goPrev);
-
-            // Allow clicking on the step labels (validate only when moving forward)
-            steps.forEach(stepBtn => {
-              stepBtn.addEventListener('click', function () {
-                const target = Number(stepBtn.dataset.step);
-                const idx = currentIndex();
-                if (target > idx) {
-                  const panel = panels.find(p => Number(p.dataset.step) === idx);
-                  if (panel && !validatePanel(panel)) return;
-                }
-                setActiveStep(target);
-              });
-            });
-
-            // Keyboard: Enter moves next (except textarea)
-            form.addEventListener('keydown', function (e) {
-              if (e.key !== 'Enter') return;
-              const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
-              if (tag === 'textarea') return;
-
-              // If the focused element is inside a panel and not on last step, move next
-              const idx = currentIndex();
-              if (idx < panels.length - 1) {
-                e.preventDefault();
-                goNext();
-              }
-            });
-
-            // Initialize from hash if present
-            const m = (location.hash || '').match(/#step-(\d+)/);
-            const initial = m ? Math.max(0, Math.min(panels.length - 1, Number(m[1]) - 1)) : 0;
-            setActiveStep(initial);
-          })();
-
-          // Disable (grey out) already-selected questions across the 3 dropdowns
-          (function () {
-            function updateSecurityQuestionOptions() {
-              const selects = Array.from(document.querySelectorAll('select.security-question'));
-              const selectedValues = new Set(
-                selects
-                  .map(s => s.value)
-                  .filter(v => v && v !== '')
-              );
-
-              selects.forEach(currentSelect => {
-                const currentValue = currentSelect.value;
-
-                Array.from(currentSelect.options).forEach(opt => {
-                  if (!opt.value) return; // skip placeholder
-
-                  // disable if selected in another dropdown
-                  const shouldDisable = selectedValues.has(opt.value) && opt.value !== currentValue;
-                  opt.disabled = shouldDisable;
-                });
-              });
-            }
-
-            document.addEventListener('change', function (e) {
-              if (e.target && e.target.matches('select.security-question')) {
-                updateSecurityQuestionOptions();
-              }
-            });
-
-            // Initialize on load
-            document.addEventListener('DOMContentLoaded', updateSecurityQuestionOptions);
-          })();
-        </script>
-
-        <!-- Shared bottom actions (aligned on one line across all steps) -->
-        <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2 tf-bottom-actions" style="font-size: calc(1rem - 2px);">
-          <div class="tf-auth-hint">Already have an account? <a href="index.html">Login here</a></div>
-
-          <div class="tf-panel__actions" style="margin-top:0;">
-            <button type="button" class="btn btn-outline-primary" id="tf-bottom-prev">Back</button>
-            <button type="button" class="btn btn-primary" id="tf-bottom-next">Next</button>
-            <button class="btn btn-primary" type="submit" id="tf-bottom-submit" style="display:none;">Sign Up</button>
           </div>
-        </div>
 
-      </form>
-    </div>
-  </section>
+          <!-- jQuery is required by legacy registration validation -->
+          <script src="../bootstrap/js/jquery-3.7.1.min.js"></script>
+          <!-- Registration restrictions/validation (legacy but needed) -->
+          <script src="../js/script.js?v=4"></script>
+          <!-- Toast must load before page scripts that call it (Next validation) -->
+          <script src="../js/components/toast.js"></script>
+          <!-- Page-specific JS (stepper + security questions + AJAX submit) -->
+          <script src="../js/pages/registration.js"></script>
 
-  
-  <!-- F01 – simplified (copyright only) -->
-  <footer class="tf-footer" role="contentinfo">
-    <div class="tf-footer__inner">
-      <div>© 2024 TaskFlow. All rights reserved.</div>
-    </div>
-  </footer>
+          <!-- Shared bottom actions (aligned on one line across all steps) -->
+          <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2 tf-bottom-actions"
+            style="font-size: calc(1rem - 2px);">
+            <div class="tf-auth-hint">Already have an account? <a href="index.html">Login here</a></div>
 
-</div>
-  
-  <script src="../bootstrap/js/jquery-3.7.1.min.js"></script>
-  <script src="../bootstrap/js/popper.min.js"></script>
-  <script src="../bootstrap/js/bootstrap.min.js"></script>
+            <div class="tf-panel__actions" style="margin-top:0;">
+              <button type="button" class="btn btn-outline-primary" id="tf-bottom-prev">Back</button>
+              <button type="button" class="btn btn-primary" id="tf-bottom-next">Next</button>
+              <button class="btn btn-primary" type="submit" id="tf-bottom-submit" style="display:none;">Sign Up</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </section>
+
+
+    <!-- F01 – simplified (copyright only) -->
+    <footer class="tf-footer" role="contentinfo">
+      <div class="tf-footer__inner">
+        <div>© 2024 TaskFlow. All rights reserved.</div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <button type="button" class="tf-theme-toggle" data-theme-toggle aria-label="Toggle theme" title="Toggle theme">
     <span class="tf-theme-toggle__icon" data-theme-icon>🌙</span>
@@ -522,6 +428,6 @@
   </button>
 
   <script src="../js/theme.js"></script>
-  <script src="../js/script.js"></script>
 </body>
+
 </html>

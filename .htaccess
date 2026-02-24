@@ -1,1 +1,8 @@
 Options -Indexes
+
+# Custom 404 — now in html/ folder
+ErrorDocument 404 /taskflow_system/html/404.html
+
+# Redirect bare root to login page
+RewriteEngine On
+RewriteRule ^$ html/index.html [R=302,L]

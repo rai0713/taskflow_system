@@ -7,42 +7,113 @@ const messageDisplay = document.createElement('div');
 const inputFields = document.querySelectorAll('input');
 const passwordField = document.querySelector('#login-password');
 const passwordIcon = document.getElementById('passwordIcon');
+
 messageDisplay.id = 'message-display';
+messageDisplay.className = 'mt-3';
 loginForm.appendChild(messageDisplay);
 
-const forgotPasswordLink = document.createElement('a');
-forgotPasswordLink.href = '#';
-forgotPasswordLink.textContent = 'Forgot Password? Reset';
-forgotPasswordLink.style.display = 'none';
-forgotPasswordLink.style.color = 'blue';
-forgotPasswordLink.style.cursor = 'pointer';
-loginForm.appendChild(forgotPasswordLink);
+function showMessage(type, text, iconClass = 'bi-info-circle-fill') {
+    const alertType = type === 'success' ? 'alert-success' : 'alert-danger';
+    messageDisplay.innerHTML = `
+        <div class="alert ${alertType} d-flex align-items-center" role="alert">
+            <i class="bi ${iconClass} flex-shrink-0 me-2"></i>
+            <div>${text}</div>
+        </div>
+    `;
+}
+
+function showRegistrationSuccessNotice() {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('registered')) return;
+
+    const msg = params.get('msg') || 'Registration successful. Please log in.';
+
+    if (window.TaskFlowToast && typeof window.TaskFlowToast.show === 'function') {
+        window.TaskFlowToast.show({
+            type: 'success',
+            title: 'Success',
+            message: msg
+        });
+    } else {
+        showMessage('success', msg, 'bi-check-circle-fill');
+    }
+
+    // Clean URL so the message does not repeat on refresh
+    window.history.replaceState({}, document.title, window.location.pathname);
+}
+
+// Target existing link instead of creating new
+const existingForgotLink = document.querySelector('a[href="forgot_password.html"]');
+if (existingForgotLink) existingForgotLink.style.display = 'none'; // Default hidden
 
 let loginAttempts = Number(localStorage.getItem('loginAttempts')) || 0;
 let lockoutTime = Number(localStorage.getItem('lockoutTime')) || 0;
+
+function updateForgotLinkVisibility() {
+    if (!existingForgotLink) return;
+
+    // Logic based on cycle (Modulo 3):
+    // Attempts % 3 == 0 (0, 3, 6, 9...): Hide (Lockout or Reset)
+    // Attempts % 3 == 1 (1, 4, 7...): Hide (1st attempt of cycle)
+    // Attempts % 3 == 2 (2, 5, 8...): Show (2nd attempt of cycle)
+
+    // Adjust logic based on user request "2nd and 3rd attempt show".
+    // 2nd Attempt (1 prev fail -> fail -> attempts=2): Show.
+    // 3rd Attempt (2 prev fails -> fail -> attempts=3): Hide (Lockout).
+
+    // So we only show if we HAVE FAILED 2 times (and not yet 3). 
+    // Wait, user says "2nd attempt forgot password". 
+    // If I fail my 1st attempt, attempts=1. Next is 2nd attempt. Link should be hidden?
+    // "1st attempt hide". Matches.
+    // "2nd attempt forgot password". 
+    // If I fail my 2nd attempt, attempts=2. Link should be Shown.
+
+    // Revised based on "2nd attempt forgot password":
+    // If attempts == 2 (failed twice, about to try 3rd), Show.
+    // User says "3rd forgot password show". 
+    // This implies link is visible FOR the 3rd attempt.
+    // If attempts == 2, we show it.
+
+    // So:
+    // 0: Hide
+    // 1: Hide
+    // 2: Show
+    // 3: Hide (Lockout)
+
+    // 4: Hide
+    // 5: Show
+    // 6: Hide (Lockout)
+
+    const remainder = loginAttempts % 3;
+    if (remainder === 2 && !lockoutTime) {
+        existingForgotLink.style.display = 'inline';
+    } else {
+        existingForgotLink.style.display = 'none';
+    }
+}
 
 async function handleLogin(e) {
     e.preventDefault();
     const currentTime = Date.now();
 
     // Check if lockout is active
-    if (lockoutTime && currentTime < lockoutTime) {
-        const remainingTime = Math.ceil((lockoutTime - currentTime) / 1000);
-        messageDisplay.textContent = `Too many failed attempts. Try again in ${remainingTime} seconds.`;
-        messageDisplay.style.color = 'red';
-        disableLogin(true, 'grey');
-        
-        const interval = setInterval(() => {
-            const timeLeft = Math.ceil((lockoutTime - Date.now()) / 1000);
-            if (timeLeft > 0) {
-                messageDisplay.textContent = `Too many failed attempts. Try again in ${timeLeft} seconds.`;
-            } else {
-                clearInterval(interval);
-                messageDisplay.textContent = '';
-                disableLogin(false, 'rgb(13, 110, 253)');
-            }
-        }, 1000);
-        return;
+    if (lockoutTime) {
+        if (currentTime < lockoutTime) {
+            const remainingTime = Math.ceil((lockoutTime - currentTime) / 1000);
+            // Ensure hidden during lockout check
+            if (existingForgotLink) existingForgotLink.style.display = 'none';
+
+            showMessage('error', `Too many failed attempts. Try again in ${remainingTime} seconds.`, 'bi-hourglass-split');
+            disableLogin(true, 'grey');
+            startLockoutTimer(lockoutTime);
+            return;
+        } else {
+            // Lockout expired
+            lockoutTime = 0;
+            localStorage.removeItem('lockoutTime');
+            disableLogin(false, 'rgb(13, 110, 253)');
+            updateForgotLinkVisibility();
+        }
     }
 
     const emailOrUsername = document.querySelector('#username-email').value;
@@ -60,20 +131,25 @@ async function handleLogin(e) {
         const data = await res.json();
         console.log(data);
         if (data.success) {
-            messageDisplay.textContent = 'Login successful!';
-            messageDisplay.style.color = 'green';
-            sessionStorage.setItem('username', emailOrUsername)
+            showMessage('success', 'Login successful! Redirecting...', 'bi-check-circle-fill');
+            sessionStorage.setItem('username', emailOrUsername);
+
+            if (data.role) sessionStorage.setItem('role', data.role);
+
             resetAttempts();
             setTimeout(() => {
-                window.location.href = 'home.html';
-            }, 2000);
+                if (data.role === 'super_admin' || data.role === 'admin') {
+                    window.location.href = '../php/admin/dashboard.php';
+                } else {
+                    window.location.href = '../php/home.php';
+                }
+            }, 800);
         } else {
             handleFailedAttempt();
         }
     } catch (err) {
         console.error('Error:', err);
-        messageDisplay.textContent = 'An error occurred while logging in. Please try again.';
-        messageDisplay.style.color = 'red';
+        showMessage('error', 'An error occurred while logging in. Please try again.', 'bi-exclamation-triangle-fill');
     }
 }
 
@@ -81,42 +157,56 @@ function handleFailedAttempt() {
     loginAttempts += 1;
     localStorage.setItem('loginAttempts', loginAttempts);
 
-    const cycleAttempt = loginAttempts % 3;
-    forgotPasswordLink.style.display = (cycleAttempt === 2) ? 'inline' : 'none';
+    let lockDuration = 0;
 
-    if (cycleAttempt === 0) { 
-        let lockDuration = 0;
-        
-        if (loginAttempts >= 9) {
-            lockDuration = 60000; 
-        } else if (loginAttempts >= 6) {
-            lockDuration = 30000;
+    // Check for Lockout (Every 3rd attempt: 3, 6, 9, 12...)
+    if (loginAttempts > 0 && loginAttempts % 3 === 0) {
+        if (loginAttempts === 3) {
+            lockDuration = 15000; // 15s
+        } else if (loginAttempts === 6) {
+            lockDuration = 30000; // 30s
         } else {
-            lockDuration = 15000;
+            lockDuration = 60000; // 60s for 9, 12, 15...
         }
+    }
 
+    if (lockDuration > 0) {
         lockoutTime = Date.now() + lockDuration;
         localStorage.setItem('lockoutTime', lockoutTime);
 
-        messageDisplay.textContent = `Too many failed attempts. Please wait ${lockDuration / 1000} seconds.`;
-        messageDisplay.style.color = 'red';
-        disableLogin(true, 'grey');
+        // Hide link immediately on lockout
+        if (existingForgotLink) existingForgotLink.style.display = 'none';
 
-        const interval = setInterval(() => {
-            const timeLeft = Math.ceil((lockoutTime - Date.now()) / 1000);
-            if (timeLeft > 0) {
-                messageDisplay.textContent = `Too many failed attempts. Try again in ${timeLeft} seconds.`;
-            } else {
-                clearInterval(interval);
-                messageDisplay.textContent = '';
-                disableLogin(false, 'rgb(13, 110, 253)');
-            }
-        }, 1000);
+        showMessage('error', `Too many failed attempts. Wait ${lockDuration / 1000}s.`, 'bi-lock-fill');
+        disableLogin(true, 'grey');
+        startLockoutTimer(lockoutTime);
 
     } else {
-        messageDisplay.textContent = 'Invalid credentials. Please try again.';
-        messageDisplay.style.color = 'red';
+        // Not locked out yet
+        updateForgotLinkVisibility();
+        showMessage('error', 'Incorrect username or password.', 'bi-exclamation-octagon-fill');
     }
+}
+
+function startLockoutTimer(targetTime) {
+    // Clear any existing interval if we were to act generic, but here we just start new
+    const interval = setInterval(() => {
+        const timeLeft = Math.ceil((targetTime - Date.now()) / 1000);
+        if (timeLeft > 0) {
+            showMessage('error', `Too many failed attempts. Try again in ${timeLeft} seconds.`, 'bi-lock-fill');
+        } else {
+            clearInterval(interval);
+            messageDisplay.innerHTML = '';
+
+            // Lockout finished
+            lockoutTime = 0;
+            localStorage.removeItem('lockoutTime');
+            disableLogin(false, 'rgb(13, 110, 253)');
+
+            // Update link visibility after lockout (should be hidden as we are at 3, 6, 9...)
+            updateForgotLinkVisibility();
+        }
+    }, 1000);
 }
 
 function resetAttempts() {
@@ -124,7 +214,7 @@ function resetAttempts() {
     lockoutTime = 0;
     localStorage.removeItem('loginAttempts');
     localStorage.removeItem('lockoutTime');
-    forgotPasswordLink.style.display = 'none';
+    if (existingForgotLink) existingForgotLink.style.display = 'none';
 }
 
 function disableLogin(disable, color) {
@@ -139,14 +229,21 @@ function disableLogin(disable, color) {
         loginButton.style.borderColor = '';
     }
     inputFields.disabled = disable;
-    homeLink.style.pointerEvents = disable ? 'none' : 'auto';
-    homeLink.style.color = disable ? color : 'rgba(255, 255, 255, 0.55)';
-    registerLink.style.pointerEvents = disable ? 'none' : 'auto';
-    // Do not force a dim color when enabled (let the header CSS style it)
-    registerLink.style.color = disable ? color : '';
-    // Keep register link styling consistent (use CSS when enabled)
-    bottomRegisterLink.style.color = disable ? color : '';
-    bottomRegisterLink.style.pointerEvents = disable ? 'none' : 'auto';
+
+    // Safety checks
+    if (homeLink) {
+        homeLink.style.pointerEvents = disable ? 'none' : 'auto';
+        homeLink.style.color = disable ? color : 'rgba(255, 255, 255, 0.55)';
+    }
+    if (registerLink) {
+        registerLink.style.pointerEvents = disable ? 'none' : 'auto';
+        registerLink.style.color = disable ? color : '';
+    }
+    if (bottomRegisterLink) {
+        bottomRegisterLink.style.color = disable ? color : '';
+        bottomRegisterLink.style.pointerEvents = disable ? 'none' : 'auto';
+    }
+
     inputFields.forEach(input => {
         input.disabled = disable;
         input.style.backgroundColor = disable ? '#e9ecef' : '';
@@ -157,47 +254,44 @@ loginForm.addEventListener('submit', handleLogin);
 
 
 const showError = (el, message) => {
-  let errMessage;
-  el.classList.add('is-invalid');
-  el.classList.remove('is-valid');
-  errMessage = el.parentElement.querySelector('.invalid-feedback');
-  errMessage.textContent = message;
+    let errMessage;
+    el.classList.add('is-invalid');
+    el.classList.remove('is-valid');
+    errMessage = el.parentElement.querySelector('.invalid-feedback');
+    if (errMessage) errMessage.textContent = message;
 }
 
 const showSuccess = (el, message) => {
-  let errMessage;
-  el.classList.add('is-valid');
-  el.classList.remove('is-invalid');
-  errMessage = el.parentElement.querySelector('.invalid-feedback');
-
-  errMessage.textContent = message;
+    let errMessage;
+    el.classList.add('is-valid');
+    el.classList.remove('is-invalid');
+    errMessage = el.parentElement.querySelector('.invalid-feedback');
+    if (errMessage) errMessage.textContent = message;
 }
-
-
 
 
 const togglePasswordVisibility = (inputField, icon) => {
     const type = inputField.getAttribute('type') === 'password' ? 'text' : 'password';
     inputField.setAttribute('type', type);
-    
+
     if (type === 'text') {
-      icon.src = '../assets/icons/visibility_off.svg';
-      icon.alt = 'Hide Password';
+        icon.src = '../assets/icons/visibility_off.svg';
+        icon.alt = 'Hide Password';
     } else {
-      icon.src = '../assets/icons/visibility_on.svg'; 
-      icon.alt = 'Show Password';
+        icon.src = '../assets/icons/visibility_on.svg';
+        icon.alt = 'Show Password';
     }
 };
 
 
-const showPassword = (inputField, icon) =>{
+const showPassword = (inputField, icon) => {
     const type = inputField.getAttribute('type') === 'password' ? 'text' : 'password';
     inputField.setAttribute('type', type);
-    
-    if(type === 'text'){
+
+    if (type === 'text') {
         icon.src = '../assets/icons/visibility_off.svg';
         icon.alt = 'Hide Password'
-    }else{
+    } else {
         icon.src = '../assets/icons/visibility_on.svg';
         icon.alt = 'Show Password'
     }
@@ -205,106 +299,56 @@ const showPassword = (inputField, icon) =>{
 
 const toggleButtonPassword = document.getElementById('togglePassword');
 if (toggleButtonPassword && passwordField && passwordIcon) {
-  toggleButtonPassword.addEventListener('click', function (e) {
-    e.preventDefault();
-    showPassword(passwordField, passwordIcon);
-  });
-}
-
-
-// function preventBackNavigation() {
-//     history.pushState(null, null, location.href);
-
-//     window.addEventListener('popstate', function () {
-//         history.pushState(null, null, location.href);
-//     });
-// }
-
-// preventBackNavigation();
-function preventBackNavigation() {
-    history.pushState(null, null, location.href); // Push the current state to history
-
-    window.addEventListener('popstate', function () {
-        // Prevent going back by pushing the state again
-        history.pushState(null, null, location.href);
+    toggleButtonPassword.addEventListener('click', function (e) {
+        e.preventDefault();
+        showPassword(passwordField, passwordIcon);
     });
-
-    // Check lockout status and reapply navigation prevention
-    const lockoutCheckInterval = setInterval(() => {
-        const currentTime = Date.now();
-
-        if (lockoutTime && currentTime < lockoutTime) {
-            // Keep preventing navigation while lockout is active
-            history.pushState(null, null, location.href);
-        } else {
-            // Clear the interval when lockout is over
-            clearInterval(lockoutCheckInterval);
-        }
-    }, 1000);
 }
 
-// Call this function to initialize the back navigation prevention
-preventBackNavigation();
+
+function preventBackNavigation() {
+    window.history.replaceState(null, null, window.location.href);
+    window.addEventListener('popstate', function () {
+        window.history.pushState(null, null, window.location.href);
+    });
+}
+// Call once
+// preventBackNavigation();
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    checkLoggedIn()
+    showRegistrationSuccessNotice();
 
+    // Check for active lockout on load
     const currentTime = Date.now();
     if (lockoutTime && currentTime < lockoutTime) {
+        // Lockout is active logic
+        if (existingForgotLink) existingForgotLink.style.display = 'none';
+
         const remainingTime = Math.ceil((lockoutTime - currentTime) / 1000);
-        messageDisplay.textContent = `Too many failed attempts. Try again in ${remainingTime} seconds.`;
-        messageDisplay.style.color = 'red';
+        showMessage('error', `Too many failed attempts. Try again in ${remainingTime} seconds.`, 'bi-hourglass-split');
         disableLogin(true, 'grey');
-        
-        const interval = setInterval(() => {
-            const timeLeft = Math.ceil((lockoutTime - Date.now()) / 1000);
-            if (timeLeft > 0) {
-                messageDisplay.textContent = `Too many failed attempts. Try again in ${timeLeft} seconds.`;
-            } else {
-                clearInterval(interval);
-                messageDisplay.textContent = '';
-                disableLogin(false, 'rgb(13, 110, 253)');
-            }
-        }, 1000);
+        startLockoutTimer(lockoutTime);
+
     } else {
-        // Reset lockout state if time has passed
-        lockoutTime = 0;
-        localStorage.removeItem('lockoutTime');
+        // No active lockout, check if expired or unrelated
+        if (lockoutTime && currentTime >= lockoutTime) {
+            lockoutTime = 0;
+            localStorage.removeItem('lockoutTime');
+        }
         disableLogin(false, 'rgb(13, 110, 253)');
+        updateForgotLinkVisibility();
     }
-})
+});
 
 
 function checkLoggedIn() {
     if (sessionStorage.getItem('username')) {
-        window.location.reload();
-        window.location.href = 'home.html';
+        var role = sessionStorage.getItem('role');
+        if (role === 'super_admin' || role === 'admin') {
+            window.location.href = '../php/admin/dashboard.php';
+        } else {
+            window.location.href = '../php/home.php';
+        }
     }
 }
-
-// Block the user from navigating back
-window.history.pushState(null, "", window.location.href);
-
-// Listen for popstate efent (back button)
-window.onpopstate = function() {
-    window.history.pushState(null, "", window.location.href);
-};
-
-function destroyHistory() {
-    // Initially push 100 states
-    for (let i = 0; i < 50; i++) {
-        window.history.pushState(null, null, window.location.href);
-    }
-
-    // Continuously push the current state into the history every 100 milliseconds
-    setInterval(function() {
-        window.history.pushState(null, null, window.location.href);
-    }, 100);  // Adjust the interval as needed
-    
-    // Capture the popstate event and prevent back navigation
-    window.onpopstate = function() {
-        window.history.pushState(null, null, window.location.href);  // Re-push the state to block back navigation
-    };
-}
-destroyHistory();

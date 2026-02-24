@@ -1,0 +1,8 @@
+# Composer
+vendor/
+
+# PHPMailer zip (leftover)
+phpmailer.zip
+
+# OTP debug log (dev only, never commit)
+php/otp_debug.log

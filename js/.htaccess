@@ -1,5 +1,6 @@
-# Allow JavaScript files to be served for this project
-# (Previous rules were blocking .js unless the referrer matched a different project.)
-<FilesMatch "\.js$">
-    Require all granted
-</FilesMatch>
+# Only serve JS files when requested by a page on this site.
+# Direct browsing (Ctrl+U → click link) sends no/empty Referer → 404.
+RewriteEngine On
+RewriteCond %{HTTP_REFERER} !^https?://(localhost|127\.0\.0\.1) [NC]
+RewriteCond %{REQUEST_URI} \.(js)$ [NC]
+RewriteRule ^ - [R=404,L]

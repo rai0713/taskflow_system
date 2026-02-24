@@ -1,0 +1,30 @@
+/* Registration page specific overrides.
+   Most of the styling already lives in existing shared CSS.
+*/
+
+/* Ensure toast isn't covered by page wrapper elements */
+.tf-page{position:relative;}
+
+/* Loading state for submit */
+#tf-bottom-submit.is-loading{
+  pointer-events:none;
+  opacity:.85;
+}
+
+#tf-bottom-submit .tf-btn-spinner{
+  display:none;
+  width:1rem;
+  height:1rem;
+  margin-right:.5rem;
+  vertical-align:-0.15em;
+  border:.15em solid rgba(255,255,255,.6);
+  border-right-color:transparent;
+  border-radius:50%;
+  animation: tfSpin .6s linear infinite;
+}
+
+#tf-bottom-submit.is-loading .tf-btn-spinner{display:inline-block;}
+
+@keyframes tfSpin {
+  to { transform: rotate(360deg); }
+}

@@ -22,6 +22,18 @@ const ordinalNumber = document.getElementById('ordinal-number');
 const submitButton = document.getElementById('submit-btn');
 const provinceField = document.querySelector('#province');
 
+// Security Answers
+const sa1Field = document.getElementById('security-answer-1');
+const sa2Field = document.getElementById('security-answer-2');
+const sa3Field = document.getElementById('security-answer-3');
+
+const toggleSA1Btn = document.getElementById('toggleSA1');
+const sa1Icon = document.getElementById('sa1Icon');
+const toggleSA2Btn = document.getElementById('toggleSA2');
+const sa2Icon = document.getElementById('sa2Icon');
+const toggleSA3Btn = document.getElementById('toggleSA3');
+const sa3Icon = document.getElementById('sa3Icon');
+
 const showError = (el, message) => {
   let errMessage;
   el.classList.add('is-invalid');
@@ -43,9 +55,9 @@ const showSuccess = (el, message) => {
 const debounce = (func, delay) => {
   let timer;
 
-  return (...args) =>{
+  return (...args) => {
     clearTimeout(timer);
-    
+
     timer = setTimeout(() => {
       func.apply(this, args);
     }, delay)
@@ -58,22 +70,22 @@ const hasDoubleSpace = (input) => {
 }
 
 const hasThreeConsecutiveLetters = (input) => {
-  const threeConsecutiveRegEx =  /(.)\1{2,}/i;
-  return threeConsecutiveRegEx.test(input); 
+  const threeConsecutiveRegEx = /(.)\1{2,}/i;
+  return threeConsecutiveRegEx.test(input);
 }
 
-const isAlphabet = (input) =>{
+const isAlphabet = (input) => {
   const specialCharacterRegex = /^[A-Za-z\s]+$/;
   return specialCharacterRegex.test(input);
 }
 
 const isIdNumberTaken = async (idNumber) => {
 
-  try{
+  try {
     const res = await fetch(`../php/check_idnumber.php?id_no=${encodeURIComponent(idNumber)}`);
     const data = await res.json();
     return data.exists;
-  }catch(err){
+  } catch (err) {
     console.error('Error fetching idnumber:', error);
     return false;
   }
@@ -84,7 +96,7 @@ const validateIdNo = async () => {
   const idRegex = /^\d{4}-\d{4}$/;
   const taken = await isIdNumberTaken(idValue);
 
-  if(idValue.length === 0){
+  if (idValue.length === 0) {
     showError(idNumberField, "ID No. is required.");
     return false;
   }
@@ -99,7 +111,7 @@ const validateIdNo = async () => {
     return false;
   }
 
-  if(taken){
+  if (taken) {
     showError(idNumberField, "ID number is already taken.");
     return false;
   }
@@ -108,21 +120,21 @@ const validateIdNo = async () => {
   return true;
 };
 
-idNumberField.addEventListener('keydown', function(event) {
+idNumberField.addEventListener('keydown', function (event) {
   const allowedKeys = [
     'Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', '-', 'Delete',
-    'Control', 'Meta', 'Shift' 
+    'Control', 'Meta', 'Shift'
   ];
 
   const isNumberKey = event.key >= '0' && event.key <= '9';
   const isCtrlA = event.ctrlKey && event.key === 'a';
   const isCtrlC = event.ctrlKey && event.key === 'c';
-  const isCtrlV = event.ctrlKey && event.key === 'v'; 
-  const isCtrlX = event.ctrlKey && event.key === 'x'; 
+  const isCtrlV = event.ctrlKey && event.key === 'v';
+  const isCtrlX = event.ctrlKey && event.key === 'x';
 
-  if (!isNumberKey && 
-      !allowedKeys.includes(event.key) && 
-      !isCtrlA && !isCtrlC && !isCtrlV && !isCtrlX) {
+  if (!isNumberKey &&
+    !allowedKeys.includes(event.key) &&
+    !isCtrlA && !isCtrlC && !isCtrlV && !isCtrlX) {
     event.preventDefault();
   }
 
@@ -150,7 +162,7 @@ idNumberField.addEventListener('keydown', function(event) {
 const capitalChecker = (field, nameWords, fieldname) => {
   const wordsToFix = [];  // Array to store words that need capitalization
   const errorMessages = [];  // Array to store error messages
-  
+
   // Loop through each word
   for (let i = 0; i < nameWords.length; i++) {
     let word = nameWords[i];
@@ -193,21 +205,21 @@ const getOrdinal = (num) => {
 };
 
 
-const checkFirstName = () =>{
+const checkFirstName = () => {
   const firstName = fname.value;
   const min = 2, max = 20;
 
 
-  if(firstName.length === 0){
+  if (firstName.length === 0) {
     showError(fname, "First name is required.");
     return false;
   }
 
-  if(firstName.indexOf(0) == " "){
+  if (firstName.indexOf(0) == " ") {
     showError(fname, "First name must not start with space.");
     return false
   }
-  
+
   if (/\d.*[a-zA-Z]/.test(firstName)) {
     showError(fname, "First name must not contain a letter after a number.");
     return false;
@@ -217,9 +229,9 @@ const checkFirstName = () =>{
     showError(fname, "First name must not start with a number.");
     return false;
   }
-  
-  
-  if(hasDoubleSpace(firstName)){
+
+
+  if (hasDoubleSpace(firstName)) {
     showError(fname, "First name must not have double space");
     return false
   }
@@ -241,15 +253,15 @@ const checkFirstName = () =>{
 
 
 
-  if(firstName.length < min || firstName.length > max){
+  if (firstName.length < min || firstName.length > max) {
     showError(fname, "First name must be between 2 and 20 character");
     console.log('helllo')
     return false;
   }
 
-  
 
-  if(hasThreeConsecutiveLetters(firstName)){
+
+  if (hasThreeConsecutiveLetters(firstName)) {
     showError(fname, "First name must not contain 3 consecutive letters or more");
     return false
   }
@@ -264,8 +276,8 @@ const checkFirstName = () =>{
   if (!capitalChecker(fname, nameWords, "first name")) {
     return false;
   }
-  
-  if(!isAlphabet(firstName)){
+
+  if (!isAlphabet(firstName)) {
     showError(fname, "First name must not contain an special character or a number");
     return false;
   }
@@ -274,11 +286,11 @@ const checkFirstName = () =>{
   return true;
 }
 
-const checkLastName = () =>{
+const checkLastName = () => {
   const lastName = lname.value
   const min = 2, max = 20;
 
-  if(lastName.length === 0){
+  if (lastName.length === 0) {
     showError(lname, "Last name is required.");
     return false;
   }
@@ -287,13 +299,13 @@ const checkLastName = () =>{
     showError(lname, "Last name must not contain a letter after a number.");
     return false;
   }
-  
-  if(hasThreeConsecutiveLetters(lastName)){
+
+  if (hasThreeConsecutiveLetters(lastName)) {
     showError(lname, "Last name must not contain 3 consecutive letters or more");
     return false
   }
 
-  if(hasDoubleSpace(lastName)){
+  if (hasDoubleSpace(lastName)) {
     showError(lname, "Last name must not have double space");
     return false;
   }
@@ -319,9 +331,9 @@ const checkLastName = () =>{
   }
 
 
-  if(lastName.length < min || lastName.length > max){
+  if (lastName.length < min || lastName.length > max) {
     showError(lname, "Last name must be between 2 and 20 character");
-    if(lastName.length > 20){
+    if (lastName.length > 20) {
       lastName.slice(0, 20);
     }
     return false;
@@ -336,7 +348,7 @@ const checkLastName = () =>{
     return false;
   }
 
-  if(!isAlphabet(lastName)){
+  if (!isAlphabet(lastName)) {
     showError(lname, "Last name must not contain an special character or a number");
     return false;
   }
@@ -345,11 +357,11 @@ const checkLastName = () =>{
   return true;
 }
 
-const checkMiddleName = () =>{
+const checkMiddleName = () => {
   const middleNameField = mname.value;
   const min = 2, max = 20;
 
-  if(middleNameField.length === 0){
+  if (middleNameField.length === 0) {
     mname.classList.remove('is-valid', 'is-invalid');
     return true;
   }
@@ -363,12 +375,12 @@ const checkMiddleName = () =>{
     showError(mname, "Middle name must not start with a number.");
     return false;
   }
-  if(hasThreeConsecutiveLetters(middleNameField)){
+  if (hasThreeConsecutiveLetters(middleNameField)) {
     showError(mname, "Middle Name must not contain 3 consecutive letters or more");
     return false;
   }
 
-  if(hasDoubleSpace(middleNameField)){
+  if (hasDoubleSpace(middleNameField)) {
     showError(mname, "Middle Name must not have double space");
     return false;
   }
@@ -387,10 +399,10 @@ const checkMiddleName = () =>{
     showError(mname, "Middle name must not end with a number.");
     return false;
   }
-  
-  if(middleNameField.length < min || middleNameField.length > max){
+
+  if (middleNameField.length < min || middleNameField.length > max) {
     showError(mname, "Middle Name must be between 2 and 20 character");
-    if(middleNameField.length > 20){
+    if (middleNameField.length > 20) {
       middleNameField.slice(0, 20);
     }
     return false;
@@ -398,12 +410,12 @@ const checkMiddleName = () =>{
 
 
   const nameWords = middleNameField.split(" ");
-  
+
   if (!capitalChecker(mname, nameWords, "middle name")) {
     return false;
   }
 
-  if(!isAlphabet(middleNameField)){
+  if (!isAlphabet(middleNameField)) {
     showError(mname, "Middle name must not contain an special character or a number");
     return false;
   }
@@ -415,11 +427,11 @@ const checkMiddleName = () =>{
 
 const isUsernameTaken = async (username) => {
 
-  try{
+  try {
     const res = await fetch(`../php/checkusername.php?username=${encodeURIComponent(username)}`);
     const data = await res.json();
     return data.exists;
-  }catch(err){
+  } catch (err) {
     console.error('Error fetching username:', err);
     return false;
   }
@@ -435,7 +447,7 @@ const checkUserName = async () => {
   const min = 3, max = 10;
   const taken = await isUsernameTaken(username)
 
-  if(username.length === 0){
+  if (username.length === 0) {
     showError(uname, "Username is required.");
     return false;
   }
@@ -460,7 +472,7 @@ const checkUserName = async () => {
   //   return false;
   // }
 
-  if(hasDoubleSpace(username)){
+  if (hasDoubleSpace(username)) {
     showError(uname, "Username must not have double space");
     return false;
   }
@@ -470,7 +482,7 @@ const checkUserName = async () => {
     return false;
   }
 
-  if(username.length < min || username.length > max){
+  if (username.length < min || username.length > max) {
     showError(uname, `Username must be between ${min} and ${max} characters long.`);
     return false;
   }
@@ -479,13 +491,13 @@ const checkUserName = async () => {
     showError(uname, 'Username can only contain small letters, numbers, dot, and underscores, and cannot start or end with an underscore.');
     return false;
   }
-  
-  if(taken){
+
+  if (taken) {
     showError(uname, "Username is already taken.");
     return false;
   }
 
-  
+
 
 
 
@@ -500,8 +512,8 @@ const isPassword = async (password) => {
   try {
     const res = await fetch(`../php/check_password.php?password=${encodeURIComponent(password)}`);
     const data = await res.json();
-    
-    return data.exists === "true"; 
+
+    return data.exists === "true";
   } catch (err) {
     console.error('Error fetching password:', err);
     return false;
@@ -519,14 +531,14 @@ const passwordValidator = async () => {
     showError(passwordField, "Password is required.");
     return false;
   }
-  
+
   const lengthValid = password.length >= 8 && password.length <= 20;
   if (!lengthValid) {
     showError(passwordField, "Password must contain at least 8 to 20 characters");
     return false;
   }
   console.log(passwordTaken);
-  if (passwordTaken){
+  if (passwordTaken) {
     showError(passwordField, "Password is already taken.");
     return false;
   }
@@ -544,7 +556,7 @@ const passwordValidator = async () => {
 
   let strengthText = "Password strength: ";
   let strengthLevel = "";
-  let colorClass = ""; 
+  let colorClass = "";
   if (strength < 3) {
     strengthLevel = "Weak";
     colorClass = "text-danger";
@@ -573,12 +585,12 @@ const confirmPasswordIcon = document.getElementById('confirmPasswordIcon');
 const togglePasswordVisibility = (inputField, icon) => {
   const type = inputField.getAttribute('type') === 'password' ? 'text' : 'password';
   inputField.setAttribute('type', type);
-  
+
   if (type === 'text') {
     icon.src = '../assets/icons/visibility_off.svg';
     icon.alt = 'Hide Password';
   } else {
-    icon.src = '../assets/icons/visibility_on.svg'; 
+    icon.src = '../assets/icons/visibility_on.svg';
     icon.alt = 'Show Password';
   }
 };
@@ -592,16 +604,33 @@ toggleConfirmPasswordButton.addEventListener('click', function () {
   togglePasswordVisibility(confirmPasswordField, confirmPasswordIcon);
 });
 
+// Security Answer Toggles
+if (toggleSA1Btn && sa1Field && sa1Icon) {
+  toggleSA1Btn.addEventListener('click', function () {
+    togglePasswordVisibility(sa1Field, sa1Icon);
+  });
+}
+if (toggleSA2Btn && sa2Field && sa2Icon) {
+  toggleSA2Btn.addEventListener('click', function () {
+    togglePasswordVisibility(sa2Field, sa2Icon);
+  });
+}
+if (toggleSA3Btn && sa3Field && sa3Icon) {
+  toggleSA3Btn.addEventListener('click', function () {
+    togglePasswordVisibility(sa3Field, sa3Icon);
+  });
+}
+
 const confirmPassword = () => {
   const password = passwordField.value;
   const confirmPassword = confirmPasswordField.value;
-  
-  if(confirmPassword.length < 1){
+
+  if (confirmPassword.length < 1) {
     showError(confirmPasswordField, 'Confirm password is required.');
     return false;
   }
 
-  if(password !== confirmPassword){
+  if (password !== confirmPassword) {
     showError(confirmPasswordField, "Password do not match");
     return false
   }
@@ -614,7 +643,7 @@ const confirmPassword = () => {
 const validateSex = () => {
   const sex = sexField.value;
 
-  if(sex === ""){
+  if (sex === "") {
     showError(sexField, "Sex is required");
     return false;
   }
@@ -626,12 +655,12 @@ const validateSex = () => {
 
 const isEmailTaken = async (email) => {
 
-  try{
+  try {
     const res = await fetch(`../php/checkemail.php?email=${encodeURIComponent(email)}`);
     const data = await res.json();
-    
+
     return data.exists;
-  }catch(err){
+  } catch (err) {
     console.error('Error fetching email:', err);
     return false;
   }
@@ -645,28 +674,28 @@ const validateEmail = async () => {
   const emailPattern = /^[a-z0-9]+(\.[a-z0-9]+)*@[a-z0-9]+(\.[a-z]{2,})+$/;
   const emailMin = 4;
   const emailMax = 60;
-  const emailTaken =  await isEmailTaken(email);
+  const emailTaken = await isEmailTaken(email);
 
   if (email.includes(' ')) {
     showError(emailField, "Email must not contain spaces.");
     return false;
   }
 
-  if(hasDoubleSpace(email)){
+  if (hasDoubleSpace(email)) {
     showError(emailField, "Middle Name must not have double space");
     return false;
   }
-  if(email.length === 0){
+  if (email.length === 0) {
     showError(emailField, "Email is required.");
     return false;
   }
 
-  if (emailTaken){
+  if (emailTaken) {
     showError(emailField, "Email is already taken.");
     return false;
   }
 
-  if(email.length < emailMin || email.length > emailMax){
+  if (email.length < emailMin || email.length > emailMax) {
     showError(emailField, `Email must have ${emailMin} to ${emailMax} characters.`);
     return false;
   }
@@ -675,7 +704,7 @@ const validateEmail = async () => {
     showError(emailField, "Please enter a valid email address. It must be all small letter, and can use dot");
     return false;
   }
-  
+
 
   showSuccess(emailField, "Email is available")
   return true;
@@ -686,7 +715,7 @@ const validateCountry = () => {
   const countryMin = 3;
   const countryMax = 60;
 
-  if(country.length === 0){
+  if (country.length === 0) {
     showError(countryField, "Country is required.");
     return false;
   }        // Regex for checking if a word starts with a capital letter followed by lowercase letters
@@ -706,7 +735,7 @@ const validateCountry = () => {
 
   // === First Name Validation ===
   // Validate each part of the first name
-  
+
 
   // for (let i = 0; i < barangaypart.length; i++) {
   //     // If the first character is a number (0-9)
@@ -747,23 +776,23 @@ const validateCountry = () => {
   //   return false;
   // }
 
-  if(country.length < countryMin || country.length > countryMax){
+  if (country.length < countryMin || country.length > countryMax) {
     showError(countryField, "Country must have atleast 3 to 60 characters")
     return false;
   }
 
-  if(hasDoubleSpace(country)){
+  if (hasDoubleSpace(country)) {
     showError(countryField, "Country name must not have double space");
     return false;
   }
 
-  if(hasThreeConsecutiveLetters(country)){
+  if (hasThreeConsecutiveLetters(country)) {
     showError(countryField, "Country name must not have three consecutive letters");
     return false
-  }  
+  }
 
   const countryWords = country.split(" ");
-  
+
   // for (let word of countryWords) {
   //   if (word.charAt(0) !== word.charAt(0).toUpperCase()) {
   //     showError(countryField, "All country names must start with a capital letter");
@@ -780,7 +809,7 @@ const validateCountry = () => {
     return false;
   }
 
-  if(!isAlphabet(country)){
+  if (!isAlphabet(country)) {
     showError(countryField, "Country name must not contain an special character");
     return false;
   }
@@ -797,7 +826,7 @@ const validateZipCode = () => {
   const zipCodePattern = /^[0-9]{4,}( [0-9]+)?$/;
 
 
-  if(zipCode.length === 0){
+  if (zipCode.length === 0) {
     showError(zipCodeField, "ZIP Code is required.");
     return false;
   }
@@ -829,7 +858,7 @@ const validateZipCode = () => {
 
   showSuccess(zipCodeField, "");
   return true;
-  
+
 }
 
 const validateCity = () => {
@@ -837,7 +866,7 @@ const validateCity = () => {
   const cityMin = 4;
   const cityMax = 60;
 
-  if(city.length === 0){
+  if (city.length === 0) {
     showError(cityField, "City is required.");
     return false;
   }
@@ -854,7 +883,7 @@ const validateCity = () => {
 
 
 
-  if(city.length < cityMin || city.length > cityMax){
+  if (city.length < cityMin || city.length > cityMax) {
     showError(cityField, "City must have at least 2 to 60 characters");
     return false;
   }
@@ -868,7 +897,7 @@ const validateCity = () => {
   const cityRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[\s\-][A-Za-zÀ-ÖØ-öø-ÿ]+)*$/;
   const firstWord = cityWords[0];
   const subsequentWords = cityWords.slice(1);
-  
+
 
   if (!cityRegex.test(firstWord)) {
     showError(cityField, "City name must contain only letters, single spaces, or dashes, and each word must start with a capital letter.");
@@ -888,7 +917,7 @@ const validateCity = () => {
   //     return false;
   //   }
   // }
-  if (!capitalChecker(cityField,cityWords, "city")) {
+  if (!capitalChecker(cityField, cityWords, "city")) {
     return false;
   }
 
@@ -920,7 +949,7 @@ const validateCity = () => {
 //     showError(barangayField, "Barangay is required.");
 //     return false;
 //   }
-  
+
 //   if (barangay.includes(" ")) {
 //     showError(idNumberField, "ID No. must not contain spaces.");
 //     return false;
@@ -984,7 +1013,7 @@ const validateBarangayName = () => {
   const barangayMax = 30;
   const barangayWords = barangay.split(" ");
   const barangaypart = barangay.trim().split(" ");
-  
+
   if (barangay.length === 0) {
     showError(barangayField, "Barangay is required.");
     return false;
@@ -1011,19 +1040,19 @@ const validateBarangayName = () => {
   for (let i = 0; i < barangaypart.length; i++) {
     // If the first character is a number (0-9)
     if (/\d/.test(barangaypart[i][0])) {
-        // If the string has more than 1 character, check that it's all numbers
-        if (barangaypart[i].length > 1 && /[a-zA-Z]/.test(barangaypart[i][1])) {
-            showError(barangayField, `The word "${barangaypart[i]}" in the Barangay Name should not start with a number and contain a letter immediately after.`);
-            return false;
-        }
+      // If the string has more than 1 character, check that it's all numbers
+      if (barangaypart[i].length > 1 && /[a-zA-Z]/.test(barangaypart[i][1])) {
+        showError(barangayField, `The word "${barangaypart[i]}" in the Barangay Name should not start with a number and contain a letter immediately after.`);
+        return false;
+      }
     }
     // If the first character is a letter
     else if (/[a-zA-Z]/.test(barangaypart[i][0])) {
-        // Check if the first letter is uppercase and the rest of the string is lowercase
-        if (!barangaypart[i].match(capitalAndLowercaseRegex2)) {
-            showError(barangayField, `The word "${barangaypart[i]}" in the Barangay should start with a capital letter followed by lowercase letters.`);
-            return false;
-        }
+      // Check if the first letter is uppercase and the rest of the string is lowercase
+      if (!barangaypart[i].match(capitalAndLowercaseRegex2)) {
+        showError(barangayField, `The word "${barangaypart[i]}" in the Barangay should start with a capital letter followed by lowercase letters.`);
+        return false;
+      }
     }
   }
 
@@ -1038,7 +1067,7 @@ const validateBarangayName = () => {
     return false;
   }
 
-  
+
   if (hasThreeConsecutiveLetters(barangay)) {
     showError(barangayField, "Barangay name must not contain 3 consecutive letters or more.");
     return false;
@@ -1087,12 +1116,12 @@ const purokValidator = () => {
   // const purokPattern = /^Purok\s[0-9]+-[A-Z]$/;  
   // const purokPattern = /^Purok\s[0-9]+(-[A-Z])?$/;
 
-  if(purok.length === 0){
+  if (purok.length === 0) {
     showError(purokField, "Purok is required.");
     return false;
   }
-  
-  if(hasDoubleSpace(purok)){
+
+  if (hasDoubleSpace(purok)) {
     showError(purokField, "Purok must not have double space");
     return false;
   }
@@ -1101,7 +1130,7 @@ const purokValidator = () => {
   //   showError(purokField, "Purok must not contain spaces.");
   //   return false;
   // }
-  
+
   if (/\d.*[a-zA-Z]/.test(purok)) {
     showError(purokField, "Purok  must not contain a letter after a number.");
     return false;
@@ -1114,11 +1143,11 @@ const purokValidator = () => {
   for (let i = 0; i < Purokpart.length; i++) {
     // If the first character is a number (0-9)
     if (/\d/.test(Purokpart[i][0])) {
-        // If the string has more than 1 character, check that it's all numbers
-        if (Purokpart[i].length > 1 && /[a-zA-Z]/.test(Purokpart[i][1])) {
-            showError(purokField, `The word "${Purokpart[i]}" in the Purok Name should not start with a number and contain a letter immediately after.`);
-            return false;
-        }
+      // If the string has more than 1 character, check that it's all numbers
+      if (Purokpart[i].length > 1 && /[a-zA-Z]/.test(Purokpart[i][1])) {
+        showError(purokField, `The word "${Purokpart[i]}" in the Purok Name should not start with a number and contain a letter immediately after.`);
+        return false;
+      }
     }
     // If the first character is a letter
     else if (/[a-zA-Z]/.test(Purokpart[i][0])) {
@@ -1129,19 +1158,19 @@ const purokValidator = () => {
       }
     }
   }
-  
-    // if (/^\d/.test(purok)) {
-    //   showError(purokField, "Purok must not start with a number.");
-    //   return false;
-    // }
+
+  // if (/^\d/.test(purok)) {
+  //   showError(purokField, "Purok must not start with a number.");
+  //   return false;
+  // }
 
 
-  if(purok.length < purokMin || purok.length > purokMax){
+  if (purok.length < purokMin || purok.length > purokMax) {
     showError(purokField, `Purok must contain at least ${purokMin} to ${purokMax} characters.`)
     return false;
   }
 
-  if(hasThreeConsecutiveLetters(purok)){
+  if (hasThreeConsecutiveLetters(purok)) {
     showError(purokField, "Purok must not contain 3 consecutive letters or more");
     return false
   }
@@ -1183,15 +1212,15 @@ const purokValidator = () => {
   //     return false;
   // }
   // const purokStreetPattern = /^(?:Purok\s)?[Pp]?-?\d+([A-Za-z0-9]?-?[A-Za-z0-9])?$/;
-//   const purokStreetPattern = /^(?:Purok\s)?[Pp]?-?\d+([A-Za-z0-9]+(?:-[A-Za-z0-9]+)?)?(\s[A-Z][a-zA-Z]*)?$/;
+  //   const purokStreetPattern = /^(?:Purok\s)?[Pp]?-?\d+([A-Za-z0-9]+(?:-[A-Za-z0-9]+)?)?(\s[A-Z][a-zA-Z]*)?$/;
 
-//   if (!purokStreetPattern.test(purok)) {
-//     showError(
-//         purokField,
-//         "The input must follow a valid format, such as 'Purok 9', 'Purok 9-A', 'P9', 'P-9A'"
-//     );
-//     return false;
-// }
+  //   if (!purokStreetPattern.test(purok)) {
+  //     showError(
+  //         purokField,
+  //         "The input must follow a valid format, such as 'Purok 9', 'Purok 9-A', 'P9', 'P-9A'"
+  //     );
+  //     return false;
+  // }
 
 
 
@@ -1200,13 +1229,13 @@ const purokValidator = () => {
 
 }
 
-const validateProvince = () =>{
+const validateProvince = () => {
   const province = provinceField.value;
   const provinceMin = 3;
   const provinceMax = 20;
   const provinceWords = province.split(" ");
 
-  if(province.length === 0){
+  if (province.length === 0) {
     showError(provinceField, "Province is required.");
     return false;
   }
@@ -1221,22 +1250,22 @@ const validateProvince = () =>{
   //   return false;
   // }
 
-  if(province.length < provinceMin || province.length > provinceMax){
+  if (province.length < provinceMin || province.length > provinceMax) {
     showError(provinceField, `Province must contain at least ${provinceMin} to ${provinceMax} characters.`)
     return false;
   }
 
-  if(hasDoubleSpace(province)){
+  if (hasDoubleSpace(province)) {
     showError(provinceField, "Province field must not have double space");
     return false;
   }
 
-  if(!isAlphabet(province)){
+  if (!isAlphabet(province)) {
     showError(provinceField, "Province field must not contain an special character");
     return false;
   }
 
-  if(hasThreeConsecutiveLetters(province)){
+  if (hasThreeConsecutiveLetters(province)) {
     showError(provinceField, "Province field must not contain 3 consecutive letters or more");
     return false
   }
@@ -1285,54 +1314,14 @@ const validateProvince = () =>{
   return true;
 }
 
-passwordField.addEventListener('input', function(e) {
-  if(confirmPasswordField.value !== ''){
+passwordField.addEventListener('input', function (e) {
+  if (confirmPasswordField.value !== '') {
     confirmPassword();
   }
 })
 
-form.addEventListener('submit', async function (e) {
-  e.preventDefault();
-
-  let isValid = true;
-
-  // if (!validateIdNo()) isValid = false;
-  if (!checkFirstName()) isValid = false;
-  if (!checkMiddleName()) isValid = false;
-  if (!checkLastName()) isValid = false;
-
-  isValid = await validateIdNo() && isValid;
-  isValid = await checkUserName() && isValid;
-  isValid = await validateEmail() && isValid;
-  if (!passwordValidator()) isValid = false;
-  if (!confirmPassword()) isValid = false;
-  // if (!validateEmail()) isValid = false;
-  if (!validateSex()) isValid = false;
-  if (!purokValidator()) isValid = false;
-  if (!validateBarangayName()) isValid = false;
-  if (!validateCity()) isValid = false;
-  if (!validateCountry()) isValid = false;
-  if (!validateZipCode()) isValid = false;
-  if (!validateProvince()) isValid = false;
-  if(!validateAndSetAge()) isValid = false;
-
-
-  const birthdateValue = birthdateInput.value;
-  const age = calculateAge(birthdateValue);
-  const minAge = 18;
-
-  if (age < minAge) {
-    alert(`You must be at least ${minAge} years old.`);
-    isValid = false;
-  }
-
-  if (isValid) {
-    alert('Register Successfully!');
-    form.submit();
-  }else{
-    alert('Please fill out the form correctly all the highlighted required fields');
-  }
-});
+// Legacy submit handler removed — registration.js AJAX handler now owns form submission.
+// All validation functions above are still called by the AJAX handler and by real-time input events.
 
 // Get references to the birthdate and age input fields
 const birthdateInput = document.getElementById('birthdate');
@@ -1342,51 +1331,216 @@ const ageError = document.getElementById('age-error');
 
 // Function to calculate age based on birthdate
 function calculateAge(birthdate) {
-    const today = new Date();
-    const birthDate = new Date(birthdate);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const month = today.getMonth();
-    const day = today.getDate();
+  const today = new Date();
+  const birthDate = new Date(birthdate);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const month = today.getMonth();
+  const day = today.getDate();
 
-    if (month < birthDate.getMonth() || (month === birthDate.getMonth() && day < birthDate.getDate())) {
-        age--;
-    }
+  if (month < birthDate.getMonth() || (month === birthDate.getMonth() && day < birthDate.getDate())) {
+    age--;
+  }
 
-    return age;
+  return age;
 }
 
 // Function to validate and update the age
 function validateAndSetAge() {
-    const birthdateValue = birthdateInput.value;
-    const age = calculateAge(birthdateValue);
-    const minAge = 18; 
-    console.log(!birthdateValue)
-    if (!birthdateValue) {
-        // ageInput.value = '';
-        // ageError.textContent = 'Please enter your birthdate.';
-        showError(birthdateInput, 'Birthdate is required. Please enter your birthdate.');
-        showError(ageInput, 'Please fill birthdate field correctly to get your age');
-        return false
-    } else if (age < minAge) {
-        ageInput.value = age;
-        ageError.textContent = `You must be at least ${minAge} years old.`;
-        return false
-    } else {
-        ageInput.value = age;
-        ageError.textContent = '';
-        return true;
-    }
+  const birthdateValue = birthdateInput.value;
+  const age = calculateAge(birthdateValue);
+  const minAge = 18;
+  console.log(!birthdateValue)
 
-   
+  // Get the feedback elements
+  const birthdateInvalidFeedback = birthdateInput.parentElement.querySelector('.invalid-feedback');
+  const ageInvalidFeedback = ageInput.parentElement.querySelector('.invalid-feedback');
+
+  if (!birthdateValue) {
+    birthdateError.textContent = 'Birthdate is required. Please enter your birthdate.';
+    birthdateError.classList.add('text-danger');
+    if (birthdateInvalidFeedback) birthdateInvalidFeedback.textContent = '';
+    birthdateInput.classList.add('is-invalid');
+    birthdateInput.classList.remove('is-valid');
+
+    ageInput.value = '';
+    ageError.textContent = 'Please fill birthdate field correctly to get your age';
+    ageError.classList.add('text-danger');
+    if (ageInvalidFeedback) ageInvalidFeedback.textContent = '';
+    ageInput.classList.add('is-invalid');
+    ageInput.classList.remove('is-valid');
+    return false;
+  } else if (age < minAge) {
+    ageInput.value = age;
+    birthdateInput.classList.remove('is-invalid');
+    birthdateInput.classList.add('is-valid');
+    birthdateError.textContent = '';
+    birthdateError.classList.remove('text-danger');
+    if (birthdateInvalidFeedback) birthdateInvalidFeedback.textContent = '';
+
+    ageError.textContent = `You must be at least ${minAge} years old.`;
+    ageError.classList.add('text-danger');
+    if (ageInvalidFeedback) ageInvalidFeedback.textContent = '';
+    ageInput.classList.add('is-invalid');
+    ageInput.classList.remove('is-valid');
+    return false;
+  } else {
+    ageInput.value = age;
+
+    // Clear all birthdate errors
+    birthdateInput.classList.remove('is-invalid');
+    birthdateInput.classList.add('is-valid');
+    birthdateError.textContent = '';
+    birthdateError.classList.remove('text-danger');
+    if (birthdateInvalidFeedback) birthdateInvalidFeedback.textContent = '';
+
+    // Clear all age errors
+    ageInput.classList.remove('is-invalid');
+    ageInput.classList.add('is-valid');
+    ageError.textContent = '';
+    ageError.classList.remove('text-danger');
+    if (ageInvalidFeedback) ageInvalidFeedback.textContent = '';
+    return true;
+  }
 }
 
 
 birthdateInput.addEventListener('change', validateAndSetAge);
 
+// ─── Security Question / Answer Validation ───
+const securityQuestion1 = document.getElementById('security-question-1');
+const securityQuestion2 = document.getElementById('security-question-2');
+const securityQuestion3 = document.getElementById('security-question-3');
+const securityAnswer1 = document.getElementById('security-answer-1');
+const securityAnswer2 = document.getElementById('security-answer-2');
+const securityAnswer3 = document.getElementById('security-answer-3');
 
+const validateSecurityAnswer = (answerField, questionField, label) => {
+  const answer = answerField.value;
+  const question = questionField.value;
+  const min = 2, max = 50;
+
+  // Question must be selected
+  if (!question || question === '') {
+    showError(questionField, label.replace('Answer', 'Question') + ' is required.');
+    return false;
+  } else {
+    showSuccess(questionField, '');
+  }
+
+  // Answer required
+  if (answer.length === 0) {
+    showError(answerField, label + ' is required.');
+    return false;
+  }
+
+  // Must not start with space
+  if (answer.charAt(0) === ' ') {
+    showError(answerField, label + ' must not start with a space.');
+    return false;
+  }
+
+  // No double spaces
+  if (hasDoubleSpace(answer)) {
+    showError(answerField, label + ' must not have double spaces.');
+    return false;
+  }
+
+  // Must not start with a number
+  if (/^\d/.test(answer)) {
+    showError(answerField, label + ' must not start with a number.');
+    return false;
+  }
+
+  // Must not start with a special character
+  if (/^[^a-zA-Z0-9]/.test(answer)) {
+    showError(answerField, label + ' must not start with a special character.');
+    return false;
+  }
+
+  // Must not end with a number
+  if (/\d$/.test(answer)) {
+    showError(answerField, label + ' must not end with a number.');
+    return false;
+  }
+
+  // Length check
+  if (answer.length < min || answer.length > max) {
+    showError(answerField, label + ' must be between ' + min + ' and ' + max + ' characters.');
+    return false;
+  }
+
+  // No 3 consecutive identical characters
+  if (hasThreeConsecutiveLetters(answer)) {
+    showError(answerField, label + ' must not contain 3 consecutive identical characters.');
+    return false;
+  }
+
+  // Capital letter check (each word must be capitalized)
+  const answerWords = answer.split(' ');
+  if (!capitalChecker(answerField, answerWords, label.toLowerCase())) {
+    return false;
+  }
+
+  // Letters and spaces only
+  if (!isAlphabet(answer)) {
+    showError(answerField, label + ' must contain only letters and spaces.');
+    return false;
+  }
+
+  showSuccess(answerField, '');
+  return true;
+};
+
+window.validateAllSecurityQuestions = () => {
+  let allValid = true;
+
+  // Validate each pair
+  if (!validateSecurityAnswer(securityAnswer1, securityQuestion1, 'Answer 1')) allValid = false;
+  if (!validateSecurityAnswer(securityAnswer2, securityQuestion2, 'Answer 2')) allValid = false;
+  if (!validateSecurityAnswer(securityAnswer3, securityQuestion3, 'Answer 3')) allValid = false;
+
+  // Check that all 3 questions are different
+  const q1 = securityQuestion1.value;
+  const q2 = securityQuestion2.value;
+  const q3 = securityQuestion3.value;
+
+  if (q1 && q2 && q1 === q2) {
+    showError(securityQuestion2, 'Security Question 2 must be different from Question 1.');
+    allValid = false;
+  }
+  if (q1 && q3 && q1 === q3) {
+    showError(securityQuestion3, 'Security Question 3 must be different from Question 1.');
+    allValid = false;
+  }
+  if (q2 && q3 && q2 === q3) {
+    showError(securityQuestion3, 'Security Question 3 must be different from Question 2.');
+    allValid = false;
+  }
+
+  return allValid;
+};
+
+// Expose for registration.js AJAX handler
+window.validateAllSecurityQuestions = validateAllSecurityQuestions;
+window.checkFirstName = checkFirstName;
+window.checkMiddleName = checkMiddleName;
+window.checkLastName = checkLastName;
+window.validateIdNo = validateIdNo;
+window.checkUserName = checkUserName;
+window.validateEmail = validateEmail;
+window.passwordValidator = passwordValidator;
+window.confirmPassword = confirmPassword;
+window.validateSex = validateSex;
+window.purokValidator = purokValidator;
+window.validateBarangayName = validateBarangayName;
+window.validateCity = validateCity;
+window.validateCountry = validateCountry;
+window.validateZipCode = validateZipCode;
+window.validateProvince = validateProvince;
+window.validateAndSetAge = validateAndSetAge;
 
 const validateFormInput = (e) => {
-  switch(e.target.id){
+  switch (e.target.id) {
     case 'id-no':
       validateIdNo();
       break;
@@ -1404,7 +1558,7 @@ const validateFormInput = (e) => {
       break;
     case 'password':
       passwordValidator();
-      break;  
+      break;
     case 'confirm-password':
       confirmPassword();
       break;
@@ -1435,6 +1589,18 @@ const validateFormInput = (e) => {
     case 'birthdate':
       validateAndSetAge()
       break;
+    case 'security-question-1':
+    case 'security-answer-1':
+      validateSecurityAnswer(securityAnswer1, securityQuestion1, 'Answer 1');
+      break;
+    case 'security-question-2':
+    case 'security-answer-2':
+      validateSecurityAnswer(securityAnswer2, securityQuestion2, 'Answer 2');
+      break;
+    case 'security-question-3':
+    case 'security-answer-3':
+      validateSecurityAnswer(securityAnswer3, securityQuestion3, 'Answer 3');
+      break;
   }
 };
 
@@ -1442,30 +1608,30 @@ const validateFormInput = (e) => {
 form.addEventListener('input', debounce(validateFormInput, 400));
 form.addEventListener('change', validateFormInput);
 
-$(document).ready(function() {
-  $('.select-option').on("click", function(e) {
+$(document).ready(function () {
+  $('.select-option').on("click", function (e) {
     const selectedValue = $(this).data('value');
     $('#extension-name').text(selectedValue);
     $('#selected-extension').val(selectedValue);
     $('.input-submenu').hide();
-    
+
     if (selectedValue !== 'Other') {
-      $('#other-extension').val(''); 
-      $('#ordinal-number').text(''); 
-      $('#error-message').hide(); 
+      $('#other-extension').val('');
+      $('#ordinal-number').text('');
+      $('#error-message').hide();
     }
-    
+
     e.preventDefault();
   });
 
-  $('.dropdown-submenu a.test').on("click", function(e) {
+  $('.dropdown-submenu a.test').on("click", function (e) {
     var inputField = $(this).siblings('.input-submenu');
     inputField.toggle();
     e.stopPropagation();
     e.preventDefault();
   });
 
-  $('#other-extension').on('input', function() {
+  $('#other-extension').on('input', function () {
     const value = $(this).val();
     const romanRegex = /^(M{0,3})(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/;
     const errorMessage = $('#error-message');
@@ -1500,8 +1666,8 @@ $(document).ready(function() {
   });
 
 
-  $('.input-submenu .submit-btn').on('click', function() {
-    const inputValue = $('#other-extension').val().trim(); 
+  $('.input-submenu .submit-btn').on('click', function () {
+    const inputValue = $('#other-extension').val().trim();
     const arabicValue = romanToInt(inputValue);
 
     if (arabicValue > 0 && /^[IVXLCDM]+$/.test(inputValue) && !/\s/.test(inputValue) && !/\d/.test(inputValue)) {
@@ -1549,35 +1715,59 @@ function getOrdinalSuffix(num) {
   return suffixes[(value - 20) % 10] || suffixes[value] || suffixes[0];
 }
 
-window.onload = function () {
-  if(sessionStorage.getItem('username')){
-      window.location.href = 'index.html';
-      return;
+// Use 'pageshow' instead of 'onload' to prevent back-forward cache (bfcache) bypass
+window.addEventListener('pageshow', function (event) {
+  // If event.persisted is true, the page was loaded from cache (e.g., via Back button)
+  if (sessionStorage.getItem('username')) {
+    // If already logged in, they shouldn't be registering.
+    window.location.href = '../php/home.php';
+    return;
   }
-    const currentTime = Date.now();
-    const lockoutTime = localStorage.getItem('lockoutTime');
+  const currentTime = Date.now();
+  const lockoutTime = localStorage.getItem('lockoutTime');
 
-    if (lockoutTime && currentTime < lockoutTime) {
-        const remainingTime = Math.ceil((lockoutTime - currentTime) / 1000);       
-        // Redirect to the last visited page or a default (login.html)
-        const lastPage = sessionStorage.getItem('currentPage') || 'index.html';
-        window.location.href = lastPage;
-    }
-    destroyHistory()
-}
+  if (lockoutTime && currentTime < lockoutTime) {
+    // Strictly redirect to login if locked out
+    window.location.replace('index.html'); // replace prevents history loop
+  }
+});
 function destroyHistory() {
   // Initially push 100 states
   for (let i = 0; i < 50; i++) {
-      window.history.pushState(null, null, window.location.href);
+    window.history.pushState(null, null, window.location.href);
   }
 
   // Continuously push the current state into the history every 100 milliseconds
-  setInterval(function() {
-      window.history.pushState(null, null, window.location.href);
+  setInterval(function () {
+    window.history.pushState(null, null, window.location.href);
   }, 100);  // Adjust the interval as needed
-  
+
   // Capture the popstate event and prevent back navigation
-  window.onpopstate = function() {
-      window.history.pushState(null, null, window.location.href);  // Re-push the state to block back navigation
+  window.onpopstate = function () {
+    window.history.pushState(null, null, window.location.href);  // Re-push the state to block back navigation
   };
 }
+
+// ── Extension Name: dropdown option click handler ─────────────────────────
+document.querySelectorAll('.select-option').forEach(function (option) {
+  option.addEventListener('click', function (e) {
+    e.preventDefault();
+    const value = this.getAttribute('data-value');
+
+    if (!value || value === 'None(default)') {
+      // None (Reset) selected
+      if (dropdownButton) dropdownButton.innerHTML = 'None(default) <span class="caret"></span>';
+      const hiddenField = document.getElementById('selected-extension');
+      if (hiddenField) hiddenField.value = '';
+      if (inputField) inputField.value = '';
+      if (errorMessage) { errorMessage.style.display = 'none'; errorMessage.textContent = ''; }
+      if (ordinalNumber) { ordinalNumber.style.display = 'none'; ordinalNumber.textContent = ''; }
+    } else {
+      // Sr. / Jr. selected
+      if (dropdownButton) dropdownButton.innerHTML = value + ' <span class="caret"></span>';
+      const hiddenField = document.getElementById('selected-extension');
+      if (hiddenField) hiddenField.value = value;
+    }
+  });
+});
+

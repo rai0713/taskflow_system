@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Your To-Do List Dashboard</title>
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="../css/register.css"> -->
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">TaskFlow</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="#">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Tasks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Profile</a>
+                    </li> -->
+                    <li class="nav-item">
+                      <form id="logout-form" action="../php/logout.php" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to logout?');">
+                        <button type="submit" class="nav-link" style="background: none; border: none; cursor: pointer;">Logout</button>
+                    </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-primary text-white text-center py-5">
+        <div class="container">
+            <h1>Welcome to TaskFlow</h1>
+            <p class="lead">Stay organized and manage your tasks efficiently.</p>
+            <a href="#dashboard" class="btn btn-light btn-lg mt-3">Get Started</a>
+        </div>
+    </header>
+
+    <section id="dashboard" class="container my-5">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Task Overview</h5>
+                        <p class="card-text">Check out all tasks and deadlines at a glance.</p>
+                        <a href="#" class="btn btn-primary">View Tasks</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Recent Activity</h5>
+                        <p class="card-text">See your recently completed tasks and latest updates.</p>
+                        <a href="#" class="btn btn-primary">View Activity</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goals and Progress -->
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Goals and Progress</h5>
+                        <p class="card-text">Track your progress and work towards your goals.</p>
+                        <a href="#" class="btn btn-primary">View Goals</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Task List Section -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center mb-4">
+                    <h2>Your Tasks</h2>
+                    <p class="lead">Organize your to-do list with priority levels and deadlines.</p>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#taskModal" onclick="resetTaskForm()">+ Add New Task</button>
+                </div>
+
+                <!-- Task List Table -->
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered" id="tasks-table">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Task Name</th>
+                                    <th>Priority</th>
+                                    <th>Deadline</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="task-list-body">
+                                <tr><td colspan="5" class="text-center">Loading tasks...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Task Modal -->
+    <div class="modal fade" id="taskModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="taskModalLabel">Add New Task</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="task-form">
+                        <input type="hidden" id="task-id">
+                        <div class="mb-3">
+                            <label for="task-title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="task-title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="task-desc" class="form-label">Description</label>
+                            <textarea class="form-control" id="task-desc" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="task-priority" class="form-label">Priority</label>
+                            <select class="form-select" id="task-priority">
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="task-deadline" class="form-label">Deadline</label>
+                            <input type="date" class="form-control" id="task-deadline">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveTask()">Save Task</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="bg-dark text-white text-center py-4">
+        <div class="container">
+            <p>&copy; 2024 TaskFlow. All rights reserved.</p>
+            <p><a href="#" class="text-white">Privacy Policy</a> | <a href="#" class="text-white">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap and Custom Script -->
+    <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/homepage.js"></script>
+</body>
+</html>

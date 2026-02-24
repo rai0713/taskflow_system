@@ -1,5 +1,6 @@
-# Allow CSS to be served for this project.
-# The previous rules were blocking .css requests unless the referrer matched another project.
-<FilesMatch "\.css$">
-    Require all granted
-</FilesMatch>
+# Only serve CSS files when requested by a page on this site.
+# Direct browsing (Ctrl+U → click link) sends no/empty Referer → 404.
+RewriteEngine On
+RewriteCond %{HTTP_REFERER} !^https?://(localhost|127\.0\.0\.1) [NC]
+RewriteCond %{REQUEST_URI} \.(css)$ [NC]
+RewriteRule ^ - [R=404,L]

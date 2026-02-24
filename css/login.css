@@ -21,7 +21,7 @@
 
   --tf-input-bg: rgba(255, 255, 255, 0.06);
   --tf-input-text: rgba(255, 255, 255, 0.92);
-  --tf-input-placeholder: rgba(255, 255, 255, 0.55);
+  --tf-input-placeholder: rgba(255, 255, 255, 0.30);
   --tf-input-border: rgba(255, 255, 255, 0.14);
   --tf-input-hover: rgba(255, 255, 255, 0.08);
   --tf-input-focus: rgba(255, 255, 255, 0.10);
@@ -45,7 +45,7 @@
 
   --tf-input-bg: rgba(2, 6, 23, 0.02);
   --tf-input-text: rgba(2, 6, 23, 0.92);
-  --tf-input-placeholder: rgba(2, 6, 23, 0.45);
+  --tf-input-placeholder: rgba(2, 6, 23, 0.30);
   --tf-input-border: rgba(2, 6, 23, 0.14);
   --tf-input-hover: rgba(2, 6, 23, 0.04);
   --tf-input-focus: rgba(2, 6, 23, 0.06);
@@ -196,8 +196,9 @@ header {
   flex: 1;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding-top: 90px; /* fixed header clearance */
+  align-items: flex-start;
+  padding-top: 105px !important;
+  /* fixed header clearance */
   padding-bottom: 18px;
 }
 
@@ -242,10 +243,61 @@ input.form-control {
 
 input.form-control::placeholder {
   color: var(--tf-input-placeholder);
+  font-style: italic;
+  font-weight: 400;
 }
 
 input.form-control:hover {
   background: var(--tf-input-hover) !important;
+}
+
+/* Password UI (matches registration) */
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 46px;
+  /* make room for icon */
+}
+
+.password-wrapper .toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-wrapper .toggle-password:focus {
+  outline: none;
+}
+
+.password-wrapper .toggle-password img {
+  width: 18px;
+  height: 18px;
+  opacity: 0.80;
+}
+
+.password-wrapper .toggle-password:hover img {
+  opacity: 1;
+}
+
+/* Force input rounded corners since button is absolute and input-group normally squares them */
+.password-wrapper input.form-control {
+  border-top-right-radius: 12px !important;
+  border-bottom-right-radius: 12px !important;
 }
 
 input.form-control:focus {

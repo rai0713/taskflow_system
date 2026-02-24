@@ -1,0 +1,161 @@
+/* ═══════════════════════════════════════════════════════════
+   TaskFlow – Shared Design Tokens
+   All pages load this file via app_top.php or directly.
+   Dark theme is the default; add data-theme="light" to :root.
+   ═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Dark theme defaults */
+  --tf-bg: #0b0f14;
+  --tf-surface: rgba(17, 24, 39, 0.82);
+  --tf-surface-2: rgba(10, 12, 16, 0.88);
+  --tf-border: rgba(255, 255, 255, 0.10);
+  --tf-border-2: rgba(255, 255, 255, 0.14);
+  --tf-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+
+  --tf-text: rgba(255, 255, 255, 0.92);
+  --tf-muted: rgba(255, 255, 255, 0.68);
+
+  --tf-accent: #c9a227;
+
+  --tf-input-bg: rgba(255, 255, 255, 0.06);
+  --tf-input-text: rgba(255, 255, 255, 0.92);
+  --tf-input-placeholder: rgba(255, 255, 255, 0.30);
+  --tf-input-border: rgba(255, 255, 255, 0.14);
+  --tf-input-hover: rgba(255, 255, 255, 0.08);
+  --tf-input-focus: rgba(255, 255, 255, 0.10);
+
+  --tf-btn-bg: var(--tf-accent);
+  --tf-btn-text: #0b0f14;
+  --tf-btn-border: rgba(255, 255, 255, 0.22);
+  --tf-btn-hover-bg: #f8fafc;
+
+  /* Bootstrap-compatible card overrides */
+  --tf-card: rgba(17, 24, 39, 0.82);
+}
+
+:root[data-theme="light"] {
+  --tf-bg: #f5f7fb;
+  --tf-surface: rgba(255, 255, 255, 0.88);
+  --tf-surface-2: rgba(255, 255, 255, 0.92);
+  --tf-border: rgba(2, 6, 23, 0.08);
+  --tf-border-2: rgba(2, 6, 23, 0.12);
+  --tf-shadow: 0 24px 70px rgba(2, 6, 23, 0.14);
+
+  --tf-text: rgba(2, 6, 23, 0.92);
+  --tf-muted: rgba(2, 6, 23, 0.62);
+
+  --tf-input-bg: rgba(2, 6, 23, 0.02);
+  --tf-input-text: rgba(2, 6, 23, 0.92);
+  --tf-input-placeholder: rgba(2, 6, 23, 0.30);
+  --tf-input-border: rgba(2, 6, 23, 0.14);
+  --tf-input-hover: rgba(2, 6, 23, 0.04);
+  --tf-input-focus: rgba(2, 6, 23, 0.06);
+
+  --tf-btn-bg: #0b0f14;
+  --tf-btn-text: #ffffff;
+  --tf-btn-border: rgba(2, 6, 23, 0.18);
+  --tf-btn-hover-bg: #111827;
+
+  --tf-card: rgba(255, 255, 255, 0.92);
+}
+
+/* ── Base ── */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', Roboto, Arial, sans-serif;
+  background: var(--tf-bg);
+  color: var(--tf-text);
+}
+
+/* Keep cards readable if a page uses Bootstrap cards */
+.card {
+  background: var(--tf-card);
+  color: var(--tf-text);
+  border-color: var(--tf-border-2);
+}
+
+.text-muted {
+  color: var(--tf-muted) !important;
+}
+
+/* Form controls — shared base styling */
+.form-control,
+.form-select {
+  background: var(--tf-input-bg);
+  color: var(--tf-input-text);
+  border-color: var(--tf-input-border);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background: var(--tf-input-focus);
+  color: var(--tf-input-text);
+  border-color: var(--tf-border-2);
+  box-shadow: 0 0 0 0.2rem rgba(201, 162, 39, 0.15);
+}
+
+/* Primary button theming */
+.btn-primary {
+  background: var(--tf-btn-bg);
+  color: var(--tf-btn-text);
+  border-color: var(--tf-btn-border);
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background: var(--tf-btn-hover-bg);
+  color: var(--tf-btn-text);
+}
+
+/* Pagination theming */
+.page-link {
+  background: var(--tf-surface);
+  color: var(--tf-text);
+  border-color: var(--tf-border);
+}
+
+.page-link:hover {
+  background: var(--tf-surface-2);
+  color: var(--tf-text);
+}
+
+.page-item.active .page-link {
+  background: var(--tf-accent);
+  border-color: var(--tf-accent);
+  color: #fff;
+}
+
+.page-item.disabled .page-link {
+  background: var(--tf-surface);
+  color: var(--tf-muted);
+  border-color: var(--tf-border);
+}
+
+/* Modal theming */
+.modal-content {
+  background: var(--tf-surface);
+  color: var(--tf-text);
+  border-color: var(--tf-border-2);
+}
+
+.modal-header {
+  border-bottom-color: var(--tf-border);
+}
+
+.modal-footer {
+  border-top-color: var(--tf-border);
+}
+
+.btn-close {
+  filter: invert(1);
+}
+
+:root[data-theme="light"] .btn-close {
+  filter: none;
+}

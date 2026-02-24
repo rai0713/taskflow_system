@@ -17,12 +17,13 @@
   --tf-text: rgba(255, 255, 255, 0.92);
   --tf-muted: rgba(255, 255, 255, 0.68);
 
-  --tf-accent: #c9a227; /* muted gold */
+  --tf-accent: #c9a227;
+  /* muted gold */
 
   /* Input surface */
   --tf-input-bg: rgba(255, 255, 255, 0.06);
   --tf-input-text: rgba(255, 255, 255, 0.92);
-  --tf-input-placeholder: rgba(255, 255, 255, 0.55);
+  --tf-input-placeholder: rgba(255, 255, 255, 0.30);
   --tf-input-border: rgba(255, 255, 255, 0.14);
   --tf-input-hover: rgba(255, 255, 255, 0.08);
   --tf-input-focus: rgba(255, 255, 255, 0.10);
@@ -48,7 +49,7 @@
 
   --tf-input-bg: rgba(2, 6, 23, 0.02);
   --tf-input-text: rgba(2, 6, 23, 0.92);
-  --tf-input-placeholder: rgba(2, 6, 23, 0.45);
+  --tf-input-placeholder: rgba(2, 6, 23, 0.30);
   --tf-input-border: rgba(2, 6, 23, 0.14);
   --tf-input-hover: rgba(2, 6, 23, 0.04);
   --tf-input-focus: rgba(2, 6, 23, 0.06);
@@ -68,8 +69,10 @@
 html {
   /* Allow scrolling (we hide the scrollbar via CSS below) */
   overflow: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* old Edge/IE */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* old Edge/IE */
 }
 
 body {
@@ -81,8 +84,10 @@ body {
 
   /* Scroll allowed, but scrollbar hidden */
   overflow-y: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* old Edge/IE */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* old Edge/IE */
 }
 
 html::-webkit-scrollbar,
@@ -109,16 +114,19 @@ body::-webkit-scrollbar {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 80px; /* fixed header clearance */
+  padding-top: 80px;
+  /* fixed header clearance */
   padding-bottom: 10px;
 }
 
 /* Scale ONLY the registration form/card area (not the header/footer) */
-.tf-auth > .tf-card {
+.tf-auth>.tf-card {
   transform: scale(0.89);
   transform-origin: top center;
-  margin-top: 10px; /* BIG visible gap below header */
+  margin-top: 10px;
+  /* BIG visible gap below header */
 }
+
 /* Keep footer visible but not tall */
 
 /* Header (H01 – Glass Simple)
@@ -274,8 +282,12 @@ header {
 /* Make the last link look like a CTA (Login button) */
 .tf-header__links a:last-child {
   background: var(--tf-btn-bg);
-  color: var(--tf-btn-text);
+  color: var(--tf-btn-text) !important;
   border: 1px solid var(--tf-btn-border);
+}
+
+:root[data-theme="light"] .tf-header__links a:last-child {
+  color: #ffffff !important;
 }
 
 .tf-header__links a:last-child:hover {
@@ -313,7 +325,8 @@ header {
 /* Extra layered sheen */
 .tf-card {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  /* must be visible so dropdown submenus aren't clipped */
 }
 
 .tf-card::before {
@@ -322,9 +335,13 @@ header {
   inset: -2px;
   /* subtle neutral highlights */
   background:
-    radial-gradient(520px 240px at 15% 0%, rgba(255,255,255,0.05), transparent 60%),
-    radial-gradient(520px 240px at 85% 0%, rgba(255,255,255,0.04), transparent 60%);
+    radial-gradient(520px 240px at 15% 0%, rgba(255, 255, 255, 0.05), transparent 60%),
+    radial-gradient(520px 240px at 85% 0%, rgba(255, 255, 255, 0.04), transparent 60%);
   pointer-events: none;
+  border-radius: inherit;
+  /* follow card corners */
+  clip-path: inset(0 round 18px);
+  /* keep sheen inside card boundary */
 }
 
 /* In light mode, remove the dark-card sheen overlay */
@@ -332,7 +349,7 @@ header {
   opacity: 0;
 }
 
-.tf-card > * {
+.tf-card>* {
   position: relative;
   z-index: 1;
 }
@@ -378,11 +395,13 @@ select.form-select {
 input.form-control::placeholder {
   color: var(--tf-input-placeholder);
   opacity: 1;
+  font-style: italic;
+  font-weight: 400;
 }
 
 /* Fix placeholders looking like typed text (stronger contrast difference) */
 input.form-control:placeholder-shown {
-  font-weight: 500;
+  font-weight: 400;
 }
 
 input.form-control:hover,
@@ -422,6 +441,23 @@ select.form-select:focus {
   border: 0 !important;
   padding: 0 !important;
   border-radius: 12px !important;
+  position: absolute;
+  /* take out of flow so it doesn't push the input */
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: auto;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  /* let the button inside handle clicks */
+}
+
+.password-wrapper .input-group-text .toggle-password {
+  pointer-events: auto;
+  /* re-enable clicks on the actual button */
 }
 
 /* Force the password input to keep rounded right corners (Bootstrap input-group removes it) */
@@ -436,6 +472,8 @@ select.form-select:focus {
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
+  z-index: 10;
+  /* sit above input so clicks reach the button */
 
   border: 0;
   background: transparent;
@@ -493,9 +531,17 @@ select.form-select:focus {
   transition: background-color 0.3s ease;
 }
 
-.bar.red { background-color: red; }
-.bar.orange { background-color: orange; }
-.bar.green { background-color: green; }
+.bar.red {
+  background-color: red;
+}
+
+.bar.orange {
+  background-color: orange;
+}
+
+.bar.green {
+  background-color: green;
+}
 
 /* Extension dropdown submenu + dropdowns (dark consistent) */
 .dropdown-submenu {
@@ -531,11 +577,21 @@ select.form-select:focus {
   padding: 9px 10px;
   font-size: 0.88rem;
   font-weight: 600;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  /* label left, caret right — always */
+  text-align: left;
 }
 
-.tf-card #extension-name.btn:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(255, 255, 255, 0.22) !important;
+.tf-card #extension-name.btn:hover,
+.tf-card #extension-name.btn:focus,
+.tf-card #extension-name.btn:active,
+.tf-card #extension-name.btn.show {
+  background: var(--tf-input-focus) !important;
+  border-color: var(--tf-border-2) !important;
+  color: var(--tf-input-text) !important;
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.10) !important;
 }
 
 /* "Other" submenu panel (dark) */
@@ -580,20 +636,22 @@ select.form-select:focus {
   display: none;
 }
 
+/* Dropdown option items — inherit dark theme, no hardcoded colors */
 .dropdown-menu .select-option {
   font-size: 0.9rem;
   padding: 6px 12px;
-  color: #000;
+  color: var(--tf-text);
   text-decoration: none;
   display: block;
 }
 
 .dropdown-menu .select-option:hover {
-  background-color: #e2e6ea;
+  background-color: rgba(255, 255, 255, 0.10);
+  color: var(--tf-text);
 }
 
 .dropdown-menu .dropdown-item {
-  color: #000;
+  color: var(--tf-text);
 }
 
 #other-extension {
@@ -604,8 +662,10 @@ select.form-select:focus {
   padding: 10px;
 }
 
+/* Caret now handled by flex justify-content:space-between on the button */
 #extension-name .caret {
-  margin-left: 110px;
+  margin-left: 8px;
+  flex-shrink: 0;
 }
 
 /* Validation messages (visible on dark background) */
@@ -615,8 +675,13 @@ select.form-select:focus {
   padding-top: 2px;
 }
 
-.valid-feedback { color: #34d399; }
-.invalid-feedback { color: #fb7185; }
+.valid-feedback {
+  color: #34d399;
+}
+
+.invalid-feedback {
+  color: #fb7185;
+}
 
 /* Buttons (professional + consistent) */
 button[type="submit"] {
@@ -775,8 +840,15 @@ button[type="submit"] {
 }
 
 @keyframes tfFadeUp {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .tf-panel__actions {
