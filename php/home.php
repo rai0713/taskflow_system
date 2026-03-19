@@ -1,17 +1,13 @@
 <?php
 require_once 'session_guard.php';
 requireLogin();
+
+$title = 'TaskFlow - Dashboard';
+$view_css = '/css/admin.css';
+$view_js = '/js/homepage.js';
+require_once 'layouts/app_top.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaskFlow - Dashboard</title>
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="../css/theme.css">
-    <link rel="stylesheet" href="../css/admin.css"> <!-- Reusing Admin CSS for Stats/Cards -->
     <style>
         body {
             background-color: var(--tf-bg);
@@ -69,8 +65,6 @@ requireLogin();
             color: var(--tf-text);
         }
     </style>
-</head>
-<body>
 
     <!-- Navbar -->
     <nav class="navbar navbar-custom">
@@ -305,7 +299,4 @@ requireLogin();
         </div>
     </div>
 
-    <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/homepage.js"></script>
-</body>
-</html>
+<?php require_once 'layouts/app_bottom.php'; ?>

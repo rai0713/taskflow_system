@@ -3,6 +3,7 @@ require_once '../session_guard.php';
 requireLogin();
 
 require_once '../connect.php';
+require_once '../log_helper.php';
 
 header('Content-Type: application/json');
 
@@ -44,7 +45,9 @@ if ($stmt) {
     $stmt->bind_param("isssss", $account_id, $title, $description, $priority, $deadline, $status);
     
     if ($stmt->execute()) {
-        echo json_encode(['success' => true, 'message' => 'Task created successfully', 'id' => $conn->insert_id]);
+        $newId = $conn->insert_id;
+        log_activity($conn, $account_id, 'Created Task', "Created new task: {$title}");
+        echo json_encode(['success' => true, 'message' => 'Task created successfully', 'id' => $newId]);
     } else {
         http_response_code(500);
         echo json_encode(['success' => false, 'error' => 'Database error: ' . $stmt->error]);

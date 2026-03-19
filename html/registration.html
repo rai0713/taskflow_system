@@ -72,7 +72,7 @@
                 <div class="col-md-4">
                   <label for="id-no" class="form-label required">ID No.</label>
                   <input type="text" class="form-control" id="id-no" name="id-no" placeholder="Ex. XXXX-XXXX"
-                    data-required="1">
+                    data-required="1" maxlength="9">
                   <div class="valid-feedback"></div>
                   <div class="invalid-feedback"></div>
                 </div>
@@ -253,9 +253,8 @@
                   <div class="input-group has-validation password-wrapper">
                     <input type="password" class="form-control" id="password" name="password"
                       aria-describedby="passwordFeedback" data-required="1">
-                    <button type="button" id="togglePassword" class="toggle-password" aria-label="Show Password">
-                      <img src="../assets/icons/visibility_on.svg" alt="Show Password" id="passwordIcon">
-                    </button>
+                    <button type="button" id="togglePassword" class="toggle-password"
+                      aria-label="Show Password">👁</button>
                     <div class="valid-feedback"></div>
                     <div class="invalid-feedback"></div>
                   </div>
@@ -268,9 +267,8 @@
                   <div class="input-group has-validation password-wrapper">
                     <input type="password" class="form-control" id="confirm-password"
                       aria-describedby="confirm-passwordFeedback" data-required="1">
-                    <button type="button" id="toggleConfirmPassword" class="toggle-password" aria-label="Show Password">
-                      <img src="../assets/icons/visibility_on.svg" alt="Show Password" id="confirmPasswordIcon">
-                    </button>
+                    <button type="button" id="toggleConfirmPassword" class="toggle-password"
+                      aria-label="Show Password">👁</button>
                     <div class="valid-feedback"></div>
                     <div class="invalid-feedback"></div>
                   </div>
@@ -308,9 +306,7 @@
                   <div class="input-group has-validation password-wrapper">
                     <input type="password" class="form-control" id="security-answer-1" name="security_answer_1"
                       autocomplete="off" data-required="1">
-                    <button type="button" class="toggle-password" id="toggleSA1" aria-label="Show Password">
-                      <img src="../assets/icons/visibility_on.svg" alt="Show Password" id="sa1Icon">
-                    </button>
+                    <button type="button" class="toggle-password" id="toggleSA1" aria-label="Show Password">👁</button>
                     <div class="valid-feedback"></div>
                     <div class="invalid-feedback"></div>
                   </div>
@@ -339,9 +335,7 @@
                   <div class="input-group has-validation password-wrapper">
                     <input type="password" class="form-control" id="security-answer-2" name="security_answer_2"
                       autocomplete="off" data-required="1">
-                    <button type="button" class="toggle-password" id="toggleSA2" aria-label="Show Password">
-                      <img src="../assets/icons/visibility_on.svg" alt="Show Password" id="sa2Icon">
-                    </button>
+                    <button type="button" class="toggle-password" id="toggleSA2" aria-label="Show Password">👁</button>
                     <div class="valid-feedback"></div>
                     <div class="invalid-feedback"></div>
                   </div>
@@ -370,9 +364,7 @@
                   <div class="input-group has-validation password-wrapper">
                     <input type="password" class="form-control" id="security-answer-3" name="security_answer_3"
                       autocomplete="off" data-required="1">
-                    <button type="button" class="toggle-password" id="toggleSA3" aria-label="Show Password">
-                      <img src="../assets/icons/visibility_on.svg" alt="Show Password" id="sa3Icon">
-                    </button>
+                    <button type="button" class="toggle-password" id="toggleSA3" aria-label="Show Password">👁</button>
                     <div class="valid-feedback"></div>
                     <div class="invalid-feedback"></div>
                   </div>
@@ -388,7 +380,7 @@
           <!-- jQuery is required by legacy registration validation -->
           <script src="../bootstrap/js/jquery-3.7.1.min.js"></script>
           <!-- Registration restrictions/validation (legacy but needed) -->
-          <script src="../js/script.js?v=4"></script>
+          <script src="../js/script.js?v=8"></script>
           <!-- Toast must load before page scripts that call it (Next validation) -->
           <script src="../js/components/toast.js"></script>
           <!-- Page-specific JS (stepper + security questions + AJAX submit) -->

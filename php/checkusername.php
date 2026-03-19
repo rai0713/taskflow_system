@@ -11,8 +11,15 @@ if (isset($_GET['username'])) {
 
     error_log("Checking for username: $username");
 
-    $stmt = $conn->prepare('SELECT `Username` FROM usraccount_tbl WHERE Username = ?');
-    $stmt->bind_param("s", $username);
+    $exclude_id = isset($_GET['exclude_id']) ? (int)$_GET['exclude_id'] : 0;
+
+    if ($exclude_id > 0) {
+        $stmt = $conn->prepare('SELECT `AccountID` FROM usraccount_tbl WHERE Username = ? AND AccountID != ?');
+        $stmt->bind_param("si", $username, $exclude_id);
+    } else {
+        $stmt = $conn->prepare('SELECT `AccountID` FROM usraccount_tbl WHERE Username = ?');
+        $stmt->bind_param("s", $username);
+    }
     $stmt->execute();
     $result = $stmt->get_result();
 

@@ -11,8 +11,15 @@ if (isset($_GET['email'])) {
 
     error_log("Checking for email: $email");
 
-    $stmt = $conn->prepare('SELECT `Email` FROM usraccount_tbl WHERE Email = ?');
-    $stmt->bind_param("s", $email);
+    $exclude_id = isset($_GET['exclude_id']) ? (int)$_GET['exclude_id'] : 0;
+
+    if ($exclude_id > 0) {
+        $stmt = $conn->prepare('SELECT `AccountID` FROM usraccount_tbl WHERE Email = ? AND AccountID != ?');
+        $stmt->bind_param("si", $email, $exclude_id);
+    } else {
+        $stmt = $conn->prepare('SELECT `AccountID` FROM usraccount_tbl WHERE Email = ?');
+        $stmt->bind_param("s", $email);
+    }
     $stmt->execute();
     $result = $stmt->get_result();
 

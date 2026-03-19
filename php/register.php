@@ -1,6 +1,7 @@
 <?php
 require_once 'connect.php';
 require_once 'mail_helper.php';
+require_once 'log_helper.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -162,6 +163,9 @@ try {
     if (!$stmt_security->execute()) {
         throw new Exception('Failed to insert into usrsecurity_tbl: ' . $stmt_security->error);
     }
+    
+    // Log Activity (Account created, waiting for approval)
+    log_activity($conn, $account_id, 'User Registered', "New user registered with ID: {$account_id_no}");
 
     $conn->commit();
 

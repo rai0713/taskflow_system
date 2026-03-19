@@ -2,6 +2,7 @@
 require_once '../session_guard.php';
 requireLogin();
 require_once '../connect.php';
+require_once '../log_helper.php';
 
 header('Content-Type: application/json');
 
@@ -26,6 +27,7 @@ $stmt->bind_param("ii", $goal_id, $account_id);
 
 if ($stmt->execute()) {
     if ($stmt->affected_rows > 0) {
+        log_activity($conn, $account_id, 'Deleted Goal', "Deleted Goal ID: {$goal_id}");
         echo json_encode(['success' => true, 'message' => 'Goal deleted']);
     } else {
         http_response_code(404);

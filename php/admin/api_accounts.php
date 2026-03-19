@@ -3,6 +3,7 @@ require_once '../session_guard.php';
 requireAdmin(); // Both admins and super_admins can reach this
 
 require_once '../connect.php';
+require_once '../log_helper.php';
 
 header('Content-Type: application/json');
 
@@ -39,7 +40,14 @@ try {
             }
         } else {
             // List Accounts with Status
-            $sql = "SELECT AccountID, Username, Email, role, id_no, Status FROM usraccount_tbl ORDER BY AccountID DESC";
+            $tab = $_GET['tab'] ?? 'active'; // Default to active/blocked
+
+            if ($tab === 'pending') {
+                $sql = "SELECT AccountID, Username, Email, role, id_no, Status FROM usraccount_tbl WHERE Status = 'pending' ORDER BY AccountID DESC";
+            } else {
+                $sql = "SELECT AccountID, Username, Email, role, id_no, Status FROM usraccount_tbl WHERE Status IN ('active', 'blocked') ORDER BY AccountID DESC";
+            }
+            
             $res = $conn->query($sql);
             $accounts = [];
             while($row = $res->fetch_assoc()) {
@@ -133,6 +141,9 @@ try {
         $stmt->bind_param("issssss", $newId, $sq1, $hsa1, $sq2, $hsa2, $sq3, $hsa3);
         $stmt->execute();
         
+        // 5. Log Activity
+        log_activity($conn, $_SESSION['account_id'], 'Created Account', "Created new {$role} account for {$username} ({$id_no})");
+
         $conn->commit();
         echo json_encode(['success' => true, 'message' => 'Account created successfully']);
     }
@@ -145,30 +156,62 @@ try {
         if (!$id) throw new Exception("ID required");
 
         // Status Update (Unblock or Admin Block)
+        // Status Update (Unblock, Approve, or Admin Block)
         // Superadmin blocks usually go through api_accounts_basis.php, but if they unblock, it comes here.
         if (isset($data['status'])) {
-            $status = $data['status']; // 'active' or 'blocked'
-            if (!in_array($status, ['active', 'blocked'])) throw new Exception("Invalid status");
+            $status = $data['status']; // 'active' or 'blocked', (or pending, but usually moving FROM pending to active)
+            if (!in_array($status, ['active', 'blocked', 'pending'])) throw new Exception("Invalid status");
             
             // Prevent self-block
             if ($id == $_SESSION['account_id']) throw new Exception("Cannot block your own account");
 
-            $stmtTarget = $conn->prepare("SELECT role FROM usraccount_tbl WHERE AccountID=?");
+            $stmtTarget = $conn->prepare("SELECT Username, Email, role, Status FROM usraccount_tbl WHERE AccountID=?");
             $stmtTarget->bind_param("i", $id);
             $stmtTarget->execute();
             $targetUser = $stmtTarget->get_result()->fetch_assoc();
             if (!$targetUser) throw new Exception("User not found");
 
-            if ($_SESSION['role'] === 'admin' && $status === 'blocked') {
+            if ($_SESSION['role'] === 'admin') {
                 if ($targetUser['role'] === 'admin' || $targetUser['role'] === 'super_admin') {
-                    throw new Exception("Admins cannot block other Admins or Super Admins");
+                    throw new Exception("Admins cannot alter the status of other Admins or Super Admins");
                 }
             }
+
+            // --- REJECTION LOGIC ---
+            // If the user was pending and the admin clicked "Reject" (sent status='blocked')
+            if ($targetUser['Status'] === 'pending' && $status === 'blocked') {
+                require_once '../mail_helper.php';
+                
+                // 1. Update the Account to Blocked
+                $stmt = $conn->prepare("UPDATE usraccount_tbl SET Status='blocked' WHERE AccountID=?");
+                $stmt->bind_param("i", $id);
+                $stmt->execute();
+                
+                // 2. Send Rejection Email
+                send_registration_rejected_email($targetUser['Email'], $targetUser['Username']);
+                
+                log_activity($conn, $_SESSION['account_id'], 'Rejected Application', "Rejected pending registration for {$targetUser['Username']} (Marked as Blocked)");
+                
+                echo json_encode(['success' => true, 'message' => "Application Rejected and Account Blocked"]);
+                exit;
+            }
+            // -----------------------
 
             $stmt = $conn->prepare("UPDATE usraccount_tbl SET Status=? WHERE AccountID=?");
             $stmt->bind_param("si", $status, $id);
             $stmt->execute();
-            echo json_encode(['success' => true, 'message' => "Account $status"]);
+            
+            // --- APPROVAL EMAIL LOGIC ---
+            if ($targetUser['Status'] === 'pending' && $status === 'active') {
+                require_once '../mail_helper.php';
+                send_registration_approved_email($targetUser['Email'], $targetUser['Username']);
+            }
+            // ----------------------------
+            
+            log_activity($conn, $_SESSION['account_id'], 'Updated Account Status', "Changed status of account ID {$id} to {$status}");
+            
+            $actionWord = ($status === 'active' && $targetUser['Status'] === 'pending') ? 'Approved' : ucfirst($status);
+            echo json_encode(['success' => true, 'message' => "Account $actionWord"]);
             exit;
         }
 
@@ -185,32 +228,108 @@ try {
             $stmt = $conn->prepare("UPDATE usraccount_tbl SET role=? WHERE AccountID=?");
             $stmt->bind_param("si", $newRole, $id);
             $stmt->execute();
+            
+            log_activity($conn, $_SESSION['account_id'], 'Updated Account Role', "Changed role of account ID {$id} to {$newRole}");
+            
             echo json_encode(['success' => true, 'message' => "Role updated to " . strtoupper($newRole)]);
             exit;
         }
         
-        // Full Update (only basic fields for now as per previous logic, usually admins edit role/email)
-        $username = $data['username'];
-        $email = $data['email'];
-        $role = $data['role'];
-        $id_no = $data['id_no'];
-        
-        $sql = "UPDATE usraccount_tbl SET Username=?, Email=?, role=?, id_no=? WHERE AccountID=?";
-        $params = [$username, $email, $role, $id_no, $id];
-        $types = "ssssi";
-        
+        // Full Update
+        $username = trim($data['username'] ?? '');
+        $email = trim($data['email'] ?? '');
+        $role = $data['role'] ?? 'user';
+        $id_no = trim($data['id_no'] ?? '');
+
+        if (!$username || !$email || !$id_no) throw new Exception("Missing account fields");
+
+        $stmtTarget = $conn->prepare("SELECT role FROM usraccount_tbl WHERE AccountID=?");
+        $stmtTarget->bind_param("i", $id);
+        $stmtTarget->execute();
+        $targetUser = $stmtTarget->get_result()->fetch_assoc();
+        if (!$targetUser) throw new Exception("User not found");
+
+        if ($_SESSION['role'] !== 'super_admin') {
+            if ($targetUser['role'] === 'super_admin' || $targetUser['role'] === 'admin') {
+                if ($id != $_SESSION['account_id']) {
+                    throw new Exception("Admins cannot edit other Admins or Super Admins.");
+                }
+            }
+            if ($role !== $targetUser['role']) {
+                throw new Exception("Only Super Admins can change roles.");
+            }
+            
+            // Force the role to remain exactly as it was, even if the JS form tampered with it
+            $role = $targetUser['role'];
+        }
+
+        // Duplicate Check (excluding current user)
+        $stmt = $conn->prepare("SELECT AccountID FROM usraccount_tbl WHERE (Username=? OR Email=?) AND AccountID != ?");
+        $stmt->bind_param("ssi", $username, $email, $id);
+        $stmt->execute();
+        if ($stmt->get_result()->num_rows > 0) throw new Exception("Username or Email already exists on another account");
+
+        $conn->begin_transaction();
+
+        // 1. Account Update
         if (!empty($data['password'])) {
             $sql = "UPDATE usraccount_tbl SET Username=?, Email=?, role=?, id_no=?, Password=? WHERE AccountID=?";
             $hashed = password_hash($data['password'], PASSWORD_DEFAULT);
-            $params = [$username, $email, $role, $id_no, $hashed, $id];
-            $types = "sssssi";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssssi", $username, $email, $role, $id_no, $hashed, $id);
+        } else {
+            $sql = "UPDATE usraccount_tbl SET Username=?, Email=?, role=?, id_no=? WHERE AccountID=?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssssi", $username, $email, $role, $id_no, $id);
         }
-        
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param($types, ...$params);
         $stmt->execute();
+
+        // 2. Info Update
+        $fname = trim($data['first_name'] ?? '');
+        $lname = trim($data['last_name'] ?? '');
+        $mname = trim($data['middle_initial'] ?? '');
+        $extname = trim($data['ext_name'] ?? '');
+        $sex = trim($data['sex'] ?? 'Male');
+        $dob = trim($data['birthdate'] ?? '');
+
+        if ($fname && $lname) {
+            $stmt = $conn->prepare("UPDATE usrinfo_tbl SET firstName=?, middleName=?, lastName=?, extName=?, sex=?, DOB=? WHERE AccountID=?");
+            $stmt->bind_param("ssssssi", $fname, $mname, $lname, $extname, $sex, $dob, $id);
+            $stmt->execute();
+        }
+
+        // 3. Address Update
+        $purok = trim($data['purok'] ?? '');
+        $city = trim($data['city'] ?? '');
+        $province = trim($data['province'] ?? '');
+        $country = trim($data['country'] ?? 'Philippines');
+        $zip = trim($data['zip'] ?? '0');
+
+        if ($purok && $city && $province) {
+            $intZip = (int)$zip;
+            $stmt = $conn->prepare("UPDATE usraddress_tbl SET `Prk/Barangay`=?, `City/Municipality`=?, Province=?, Country=?, `Zip Code`=? WHERE AccountID=?");
+            $stmt->bind_param("ssssii", $purok, $city, $province, $country, $intZip, $id);
+            $stmt->execute();
+        }
+
+        // 4. Security Update (Optional)
+        $sq1 = trim($data['sq1'] ?? ''); $sa1 = trim($data['sa1'] ?? '');
+        $sq2 = trim($data['sq2'] ?? ''); $sa2 = trim($data['sa2'] ?? '');
+        $sq3 = trim($data['sq3'] ?? ''); $sa3 = trim($data['sa3'] ?? '');
         
-        echo json_encode(['success' => true, 'message' => 'Account updated']);
+        if ($sq1 && $sa1 && $sq2 && $sa2 && $sq3 && $sa3) {
+            $hsa1 = password_hash($sa1, PASSWORD_DEFAULT);
+            $hsa2 = password_hash($sa2, PASSWORD_DEFAULT);
+            $hsa3 = password_hash($sa3, PASSWORD_DEFAULT);
+            $stmt = $conn->prepare("UPDATE usrsecurity_tbl SET Question1=?, Answer1=?, Question2=?, Answer2=?, Question3=?, Answer3=? WHERE AccountID=?");
+            $stmt->bind_param("ssssssi", $sq1, $hsa1, $sq2, $hsa2, $sq3, $hsa3, $id);
+            $stmt->execute();
+        }
+
+        log_activity($conn, $_SESSION['account_id'], 'Updated Account Profile', "Updated details for Account ID {$id}");
+
+        $conn->commit();
+        echo json_encode(['success' => true, 'message' => 'Account successfully updated']);
     }
     
     elseif ($method === 'DELETE') {

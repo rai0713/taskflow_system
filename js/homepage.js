@@ -14,9 +14,20 @@ async function sendRequest(url, method, data) {
         if (data) options.body = JSON.stringify(data);
 
         const res = await fetch(url, options);
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        let result;
+        try {
+            result = await res.json();
+        } catch (e) {
+            // Not JSON
+        }
 
-        const result = await res.json();
+        if (!res.ok) {
+            if (result && result.error) {
+                return result; // Backend provided a specific error reason
+            }
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
         return result;
     } catch (err) {
         console.error('Request failed:', err);

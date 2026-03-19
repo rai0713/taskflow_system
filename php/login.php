@@ -1,6 +1,7 @@
 <?php
 
 require_once 'connect.php';
+require_once 'log_helper.php';
 session_start();
 
 header('Content-Type: application/json; charset=utf-8');
@@ -31,14 +32,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $_SESSION['username'] = 'System SuperAdmin';
             $_SESSION['role'] = 'super_admin';
             
-            // Log fallback login
-            $ip_address = $_SERVER['REMOTE_ADDR'];
-            $user_agent = $_SERVER['HTTP_USER_AGENT'];
-            $log_sql = "INSERT INTO login_logs (AccountID, ip_address, user_agent, browser_name, action) VALUES (0, ?, ?, 'Fallback', 'login')";
-            $log_stmt = $conn->prepare($log_sql);
-            $log_stmt->bind_param("ss", $ip_address, $user_agent);
-            $log_stmt->execute();
-            $log_stmt->close();
+            // Bypass database logging for AccountID 0 to prevent Foreign Key constraints error
+            // As the system founder is intentionally invisible to the database.
 
             echo json_encode(['success' => true, 'role' => 'super_admin']);
             exit();
@@ -57,7 +52,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
       
       // Check if blocked
       if (isset($user['Status']) && $user['Status'] === 'blocked') {
-        echo json_encode(['success' => false, 'error' => 'Your account has been blocked. Please contact support.']);
+        echo json_encode(['success' => false, 'error' => 'Your account has been blocked by an Administrator.']);
         exit();
       }
 
@@ -91,6 +86,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $log_stmt->bind_param("isss", $user['AccountID'], $ip_address, $user_agent, $browser);
         $log_stmt->execute();
         $log_stmt->close();
+
+        // System Global Activity Log
+        log_activity($conn, $user['AccountID'], 'System Login', "User successfully logged in via {$browser}");
 
         // Return Data
         echo json_encode(['success' => true, 'role' => $user['role']]);

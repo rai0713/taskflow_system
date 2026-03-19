@@ -15,5 +15,10 @@
 <?php if (!empty($view_js)): ?>
 <script src="<?= BASE . htmlspecialchars($view_js) ?>"></script>
 <?php endif; ?>
+<?php if (!empty($extra_js) && is_array($extra_js)): ?>
+<?php foreach($extra_js as $js): ?>
+<script src="<?= BASE . htmlspecialchars($js) ?>"></script>
+<?php endforeach; ?>
+<?php endif; ?>
 </body>
 </html>

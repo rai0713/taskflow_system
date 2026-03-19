@@ -16,14 +16,13 @@ $role = $_SESSION['role'] ?? 'user';
         <a href="<?= BASE ?>/php/admin/dashboard.php" class="nav-link <?= $current_page == 'dashboard.php' ? 'active' : '' ?>">
             <i>📊</i> Dashboard
         </a>
-        
         <?php if ($role === 'super_admin'): ?>
-        <a href="<?= BASE ?>/php/admin/logs.php" class="nav-link <?= $current_page == 'logs.php' ? 'active' : '' ?>">
+        <a href="<?= BASE ?>/php/admin/logs.php" class="nav-link <?= in_array($current_page, ['logs.php', 'activity_logs.php']) ? 'active' : '' ?>">
             <i>📜</i> Logs
         </a>
         <?php endif; ?>
 
-        <?php if ($role === 'super_admin'): ?>
+        <?php if ($role === 'super_admin' || $role === 'admin'): ?>
         <a href="<?= BASE ?>/php/admin/accounts.php" class="nav-link <?= $current_page == 'accounts.php' ? 'active' : '' ?>">
             <i>👥</i> Account Management
         </a>

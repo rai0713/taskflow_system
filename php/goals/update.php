@@ -2,6 +2,7 @@
 require_once '../session_guard.php';
 requireLogin();
 require_once '../connect.php';
+require_once '../log_helper.php';
 
 header('Content-Type: application/json');
 
@@ -56,6 +57,7 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param($types, ...$params);
 
 if ($stmt->execute()) {
+    log_activity($conn, $account_id, 'Updated Goal', "Updated details for Goal ID: {$goal_id}");
     echo json_encode(['success' => true, 'message' => 'Goal updated']);
 } else {
     http_response_code(500);

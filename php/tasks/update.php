@@ -3,6 +3,7 @@ require_once '../session_guard.php';
 requireLogin();
 
 require_once '../connect.php';
+require_once '../log_helper.php';
 
 header('Content-Type: application/json');
 
@@ -60,6 +61,15 @@ if (isset($input['priority'])) {
     $types .= "s";
 }
 if (isset($input['deadline'])) {
+    $deadline_date = date('Y-m-d', strtotime($input['deadline']));
+    $current_date = date('Y-m-d');
+    
+    if ($deadline_date < $current_date) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Deadline cannot be in the past.']);
+        exit;
+    }
+
     $updates[] = "Deadline = ?";
     $params[] = $input['deadline'];
     $types .= "s";
@@ -79,6 +89,7 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param($types, ...$params);
 
 if ($stmt->execute()) {
+    log_activity($conn, $account_id, 'Updated Task', "Updated task details for Task ID {$task_id}");
     echo json_encode(['success' => true, 'message' => 'Task updated']);
 } else {
     http_response_code(500);

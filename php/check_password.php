@@ -7,11 +7,19 @@ function sanitizePassword($password) {
 
 if (isset($_GET['password'])) {
     $password = sanitizePassword($_GET['password']);
+    $exclude_id = isset($_GET['exclude_id']) ? (int)$_GET['exclude_id'] : 0;
     
-    $sql_check_password = "SELECT password FROM usraccount_tbl"; // Correct SQL query to fetch passwords
-    $result_password = $conn->query($sql_check_password);
+    if ($exclude_id > 0) {
+        $stmt = $conn->prepare("SELECT password FROM usraccount_tbl WHERE AccountID != ?");
+        $stmt->bind_param("i", $exclude_id);
+        $stmt->execute();
+        $result_password = $stmt->get_result();
+    } else {
+        $sql_check_password = "SELECT password FROM usraccount_tbl";
+        $result_password = $conn->query($sql_check_password);
+    }
     
-    if ($result_password && $result_password->num_rows > 0) { // Ensure result is valid and contains rows
+    if ($result_password && $result_password->num_rows > 0) {
         // Loop through all passwords in the database
         while ($row = $result_password->fetch_assoc()) {
             if (password_verify($password, $row['password'])) { // Verify if password matches any stored hash

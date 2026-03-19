@@ -5,6 +5,7 @@
  */
 session_start();
 require_once 'connect.php';
+require_once 'log_helper.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -42,6 +43,9 @@ $stmt->bind_param('si', $hashedPassword, $accountId);
 if (!$stmt->execute()) {
     json_out(false, 'Failed to update password. Please try again.');
 }
+
+// Log Activity
+log_activity($conn, $accountId, 'Password Reset', "User reset their password via Forgot Password OTP");
 
 // Clear all reset session variables
 unset(

@@ -15,9 +15,16 @@ if (!isset($_GET['id_no'])) {
 
 // Keep raw value for DB lookup; just trim
 $idNumber = trim((string)$_GET['id_no']);
+$exclude_id = isset($_GET['exclude_id']) ? (int)$_GET['exclude_id'] : 0;
 
-$stmt = $conn->prepare('SELECT 1 FROM usraccount_tbl WHERE id_no = ? LIMIT 1');
-$stmt->bind_param('s', $idNumber);
+if ($exclude_id > 0) {
+    $stmt = $conn->prepare('SELECT 1 FROM usraccount_tbl WHERE id_no = ? AND AccountID != ? LIMIT 1');
+    $stmt->bind_param('si', $idNumber, $exclude_id);
+} else {
+    $stmt = $conn->prepare('SELECT 1 FROM usraccount_tbl WHERE id_no = ? LIMIT 1');
+    $stmt->bind_param('s', $idNumber);
+}
+
 $stmt->execute();
 $stmt->store_result();
 

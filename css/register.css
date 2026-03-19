@@ -421,8 +421,10 @@ select.form-select:focus {
 }
 
 /* Password UI (kept) */
-.password-wrapper {
-  position: relative;
+/* Hide Microsoft Edge native password reveal button */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
 }
 
 .password-wrapper {
@@ -467,25 +469,47 @@ select.form-select:focus {
 }
 
 /* Place the toggle button INSIDE the field (like social apps) */
-.password-wrapper .toggle-password {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
+.password-wrapper .toggle-password,
+.input-group.password-wrapper .toggle-password {
+  position: absolute !important;
+  right: 12px !important;
+  top: 25px !important;
+  transform: translateY(-50%) !important;
+  z-index: 10 !important;
   /* sit above input so clicks reach the button */
+  bottom: auto !important;
 
-  border: 0;
-  background: transparent;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  cursor: pointer !important;
 
-  width: 22px;
-  height: 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  width: 22px !important;
+  height: 22px !important;
+  min-height: 22px !important;
+  max-height: 22px !important;
+  flex: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* OVERRIDE BOOTSTRAP VALIDATION PUSHING THE BUTTON OUT */
+.password-wrapper input.is-valid~.toggle-password,
+.password-wrapper input.is-invalid~.toggle-password,
+.input-group.password-wrapper input.is-valid~.toggle-password,
+.input-group.password-wrapper input.is-invalid~.toggle-password {
+  right: 12px !important;
+  margin: 0 !important;
+  top: 25px !important;
+  bottom: auto !important;
+  transform: translateY(-50%) !important;
+}
+
+/* PREVENT LONG ERROR TEXT FROM CLIPPING THE TOGGLE BUTTON */
+.password-wrapper .invalid-feedback {
+  padding-right: 32px;
 }
 
 .password-wrapper .toggle-password:hover {

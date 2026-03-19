@@ -3,6 +3,7 @@ require_once '../session_guard.php';
 requireLogin();
 requireAdmin();
 require_once '../connect.php';
+require_once '../log_helper.php';
 
 header('Content-Type: application/json');
 
@@ -34,7 +35,7 @@ try {
         throw new Exception("An attachment (PDF/Image) is required as a basis.");
     }
 
-    // 1. Create table if not exists
+    // 1. Create table if not exists (Removed ActionByAdminID FK to allow God Mode ID 0)
     $conn->query("CREATE TABLE IF NOT EXISTS action_basis_tbl (
         BasisID INT AUTO_INCREMENT PRIMARY KEY,
         TargetAccountID INT NOT NULL,
@@ -43,9 +44,15 @@ try {
         Reason TEXT NOT NULL,
         FilePath VARCHAR(255) NOT NULL,
         CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (TargetAccountID) REFERENCES usraccount_tbl(AccountID) ON DELETE CASCADE,
-        FOREIGN KEY (ActionByAdminID) REFERENCES usraccount_tbl(AccountID) ON DELETE CASCADE
+        FOREIGN KEY (TargetAccountID) REFERENCES usraccount_tbl(AccountID) ON DELETE CASCADE
     )");
+
+    // Safety fallback: if table exists with old constraint, drop it
+    try {
+        $conn->query("ALTER TABLE action_basis_tbl DROP FOREIGN KEY action_basis_tbl_ibfk_2");
+    } catch (Exception $fallbackE) {
+        // Ignore if constraint doesn't exist
+    }
 
     // 2. Upload file
     $uploadDir = dirname(__DIR__, 2) . '/uploads/basis_documents/';
@@ -81,6 +88,8 @@ try {
     $stmtBlock = $conn->prepare("UPDATE usraccount_tbl SET Status = ? WHERE AccountID = ?");
     $stmtBlock->bind_param("si", $action, $target_id);
     $stmtBlock->execute();
+
+    log_activity($conn, $_SESSION['account_id'], 'Blocked Account (with Basis)', "Status of Account ID {$target_id} changed to {$action}. Evidence stored at {$relativePath}");
 
     $conn->commit();
     echo json_encode(['success' => true, 'message' => 'Action executed with valid basis.']);

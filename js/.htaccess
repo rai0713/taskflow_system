@@ -1,6 +1,18 @@
-# Only serve JS files when requested by a page on this site.
-# Direct browsing (Ctrl+U → click link) sends no/empty Referer → 404.
+# Secure JS files from direct URL bar access but allow them inside HTML <script> tags
 RewriteEngine On
-RewriteCond %{HTTP_REFERER} !^https?://(localhost|127\.0\.0\.1) [NC]
-RewriteCond %{REQUEST_URI} \.(js)$ [NC]
-RewriteRule ^ - [R=404,L]
+
+# 1. Modern Browsers: If the user types the JS URL directly, the Dest is "document"
+RewriteCond %{HTTP:Sec-Fetch-Dest} document [NC]
+RewriteRule \.(js)$ - [R=404,L]
+
+# 2. Fallback: If no Sec-Fetch headers are sent AND there is absolutely no referer (direct access)
+RewriteCond %{HTTP:Sec-Fetch-Dest} ^$
+RewriteCond %{HTTP_REFERER} ^$
+RewriteRule \.(js)$ - [R=404,L]
+
+# 3. Security: Prevent browsers from caching JS files locally so the 404 block cannot be bypassed by looking at browser history memory
+<FilesMatch "\.js$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+</FilesMatch>

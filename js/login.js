@@ -1,7 +1,7 @@
 const loginForm = document.getElementById('login-form');
 const loginButton = loginForm.querySelector('button[type="submit"]');
 const registerLink = document.querySelector('a[href="registration.html"]');
-const bottomRegisterLink = document.getElementById('bottomRegister');
+const bottomRegisterLink = document.querySelector('a[href="registration.html"].btn-outline-primary');
 const homeLink = document.querySelector('a[href="#"]')
 const messageDisplay = document.createElement('div');
 const inputFields = document.querySelectorAll('input');
@@ -11,6 +11,11 @@ const passwordIcon = document.getElementById('passwordIcon');
 messageDisplay.id = 'message-display';
 messageDisplay.className = 'mt-3';
 loginForm.appendChild(messageDisplay);
+
+// Always clear frontend session storage when arriving at the login page
+// This prevents ghost sessions bouncing the user from the registration page after logging out
+sessionStorage.removeItem('username');
+sessionStorage.removeItem('role');
 
 function showMessage(type, text, iconClass = 'bi-info-circle-fill') {
     const alertType = type === 'success' ? 'alert-success' : 'alert-danger';
@@ -145,7 +150,7 @@ async function handleLogin(e) {
                 }
             }, 800);
         } else {
-            handleFailedAttempt();
+            handleFailedAttempt(data.error);
         }
     } catch (err) {
         console.error('Error:', err);
@@ -153,7 +158,7 @@ async function handleLogin(e) {
     }
 }
 
-function handleFailedAttempt() {
+function handleFailedAttempt(errorMsg = 'Incorrect username or password.') {
     loginAttempts += 1;
     localStorage.setItem('loginAttempts', loginAttempts);
 
@@ -184,7 +189,7 @@ function handleFailedAttempt() {
     } else {
         // Not locked out yet
         updateForgotLinkVisibility();
-        showMessage('error', 'Incorrect username or password.', 'bi-exclamation-octagon-fill');
+        showMessage('error', errorMsg, 'bi-exclamation-octagon-fill');
     }
 }
 
@@ -233,15 +238,15 @@ function disableLogin(disable, color) {
     // Safety checks
     if (homeLink) {
         homeLink.style.pointerEvents = disable ? 'none' : 'auto';
-        homeLink.style.color = disable ? color : 'rgba(255, 255, 255, 0.55)';
+        homeLink.style.color = disable ? 'grey' : 'rgba(255, 255, 255, 0.55)';
     }
     if (registerLink) {
         registerLink.style.pointerEvents = disable ? 'none' : 'auto';
-        registerLink.style.color = disable ? color : '';
+        registerLink.style.color = disable ? 'grey' : '';
     }
     if (bottomRegisterLink) {
-        bottomRegisterLink.style.color = disable ? color : '';
         bottomRegisterLink.style.pointerEvents = disable ? 'none' : 'auto';
+        bottomRegisterLink.style.color = disable ? 'grey' : '';
     }
 
     inputFields.forEach(input => {
@@ -352,3 +357,18 @@ function checkLoggedIn() {
         }
     }
 }
+
+// -------------------------------------------------------------
+// Hardcap logic to ensure links cannot be activated by keyboard
+// tabs or script bypasses during an active lockout.
+// -------------------------------------------------------------
+[homeLink, registerLink, bottomRegisterLink].forEach(link => {
+    if (link) {
+        link.addEventListener('click', (e) => {
+            if (loginButton && loginButton.disabled) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+    }
+});
